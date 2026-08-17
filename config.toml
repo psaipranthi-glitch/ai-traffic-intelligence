@@ -8,6 +8,6 @@ textColor = "#E7EDF3"
 font = "monospace"
 
 [server]
-maxUploadSize = 200
-maxMessageSize = 200
+maxUploadSize = 150
+maxMessageSize = 150
 ```
