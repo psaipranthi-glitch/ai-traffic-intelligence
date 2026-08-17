@@ -19,7 +19,7 @@ st.set_page_config(
 
 
 # =========================================================
-# CUSTOM THEME
+# THEME
 # =========================================================
 
 def inject_theme():
@@ -39,7 +39,6 @@ def inject_theme():
             --text: #E7EDF3;
             --muted: #8B9AA8;
             --cyan: #00E6C3;
-            --orange: #FFB020;
         }
 
         html,
@@ -52,10 +51,10 @@ def inject_theme():
             background:
                 radial-gradient(
                     circle at 15% 0%,
-                    rgba(0, 230, 195, 0.055),
+                    rgba(0,230,195,0.055),
                     transparent 35%
                 ),
-                var(--bg);
+                #0A0E13;
         }
 
         header[data-testid="stHeader"] {
@@ -70,168 +69,16 @@ def inject_theme():
 
 
         /* =================================================
-           HEADER
-           ================================================= */
-
-        .console-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            width: 100%;
-
-            padding: 20px 24px;
-
-            margin-bottom: 28px;
-
-            background: var(--panel);
-
-            border: 1px solid var(--border);
-
-            border-radius: 8px;
-
-            box-sizing: border-box;
-        }
-
-        .console-title {
-            margin: 0;
-
-            font-family: 'JetBrains Mono', monospace;
-
-            font-size: 23px;
-
-            font-weight: 700;
-
-            letter-spacing: 0.6px;
-
-            color: var(--text);
-        }
-
-        .console-sub {
-            margin: 7px 0 0 0;
-
-            font-size: 13px;
-
-            color: var(--muted);
-
-            letter-spacing: 0.4px;
-        }
-
-
-        /* =================================================
-           LIVE BADGE
-           ================================================= */
-
-        .live-badge {
-            display: flex;
-
-            align-items: center;
-
-            gap: 8px;
-
-            padding: 7px 14px;
-
-            border: 1px solid rgba(0, 230, 195, 0.35);
-
-            border-radius: 999px;
-
-            background: rgba(0, 230, 195, 0.06);
-
-            color: var(--cyan);
-
-            font-family: 'JetBrains Mono', monospace;
-
-            font-size: 11px;
-
-            font-weight: 600;
-
-            letter-spacing: 1px;
-
-            white-space: nowrap;
-        }
-
-        .live-dot {
-            width: 8px;
-            height: 8px;
-
-            border-radius: 50%;
-
-            background: var(--cyan);
-
-            box-shadow:
-                0 0 8px rgba(0, 230, 195, 0.8);
-        }
-
-
-        /* =================================================
-           SECTION LABELS
-           ================================================= */
-
-        .section-label {
-            margin: 25px 0 12px 0;
-
-            padding-left: 10px;
-
-            border-left: 2px solid var(--cyan);
-
-            font-family: 'JetBrains Mono', monospace;
-
-            font-size: 11px;
-
-            font-weight: 600;
-
-            letter-spacing: 1.8px;
-
-            text-transform: uppercase;
-
-            color: var(--muted);
-        }
-
-
-        /* =================================================
-           FILE UPLOADER
-           ================================================= */
-
-        [data-testid="stFileUploader"] {
-            background: var(--panel);
-
-            border: 1px solid var(--border);
-
-            border-radius: 8px;
-
-            padding: 12px;
-        }
-
-
-        /* =================================================
-           VIDEO
-           ================================================= */
-
-        [data-testid="stImage"] {
-            width: 100%;
-
-            padding: 7px;
-
-            background: var(--panel);
-
-            border: 1px solid var(--border);
-
-            border-radius: 8px;
-        }
-
-
-        /* =================================================
-           KPI CARDS
+           KPI
            ================================================= */
 
         .kpi {
             min-height: 88px;
-
             padding: 15px 17px;
 
-            background: rgba(16, 22, 29, 0.9);
+            background: rgba(16,22,29,0.90);
 
-            border: 1px solid var(--border);
+            border: 1px solid #26323D;
 
             border-radius: 7px;
 
@@ -251,7 +98,7 @@ def inject_theme():
 
             text-transform: uppercase;
 
-            color: var(--muted);
+            color: #8B9AA8;
         }
 
         .kpi-value {
@@ -261,11 +108,68 @@ def inject_theme():
 
             font-weight: 600;
 
-            color: var(--text);
+            color: #E7EDF3;
         }
 
         .kpi-value.accent {
-            color: var(--cyan);
+            color: #00E6C3;
+        }
+
+
+        /* =================================================
+           SECTION LABEL
+           ================================================= */
+
+        .section-label {
+            margin: 25px 0 12px 0;
+
+            padding-left: 10px;
+
+            border-left: 2px solid #00E6C3;
+
+            font-family: 'JetBrains Mono', monospace;
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            letter-spacing: 1.8px;
+
+            text-transform: uppercase;
+
+            color: #8B9AA8;
+        }
+
+
+        /* =================================================
+           FILE UPLOADER
+           ================================================= */
+
+        [data-testid="stFileUploader"] {
+            background: #10161D;
+
+            border: 1px solid #26323D;
+
+            border-radius: 8px;
+
+            padding: 12px;
+        }
+
+
+        /* =================================================
+           VIDEO
+           ================================================= */
+
+        [data-testid="stImage"] {
+            width: 100%;
+
+            padding: 7px;
+
+            background: #10161D;
+
+            border: 1px solid #26323D;
+
+            border-radius: 8px;
         }
 
 
@@ -280,13 +184,13 @@ def inject_theme():
 
             padding: 10px 16px;
 
-            border: 1px solid var(--cyan);
+            border: 1px solid #00E6C3;
 
             border-radius: 7px;
 
-            background: rgba(0, 230, 195, 0.07);
+            background: rgba(0,230,195,0.07);
 
-            color: var(--cyan);
+            color: #00E6C3;
 
             font-family: 'JetBrains Mono', monospace;
 
@@ -296,11 +200,11 @@ def inject_theme():
         }
 
         .stButton > button:hover {
-            background: rgba(0, 230, 195, 0.16);
+            background: rgba(0,230,195,0.16);
 
-            border-color: var(--cyan);
+            border-color: #00E6C3;
 
-            color: var(--cyan);
+            color: #00E6C3;
         }
 
 
@@ -309,7 +213,7 @@ def inject_theme():
            ================================================= */
 
         [data-testid="stDataFrame"] {
-            border: 1px solid var(--border);
+            border: 1px solid #26323D;
 
             border-radius: 7px;
 
@@ -330,9 +234,9 @@ def inject_theme():
 
             text-align: center;
 
-            background: rgba(16, 22, 29, 0.55);
+            background: rgba(16,22,29,0.55);
 
-            border: 1px dashed var(--border);
+            border: 1px dashed #26323D;
 
             border-radius: 7px;
 
@@ -342,7 +246,7 @@ def inject_theme():
 
             letter-spacing: 0.8px;
 
-            color: var(--muted);
+            color: #8B9AA8;
         }
 
 
@@ -359,7 +263,7 @@ def inject_theme():
 
             letter-spacing: 0.3px;
 
-            color: var(--muted);
+            color: #8B9AA8;
         }
 
         </style>
@@ -376,26 +280,61 @@ def render_header():
 
     st.markdown(
         """
-        <div class="console-header">
+        <div style="
+            background:#10161D;
+            border:1px solid #26323D;
+            border-radius:8px;
+            padding:20px 24px;
+            margin-bottom:28px;
+            width:100%;
+            box-sizing:border-box;
+        ">
 
-            <div>
-
-                <p class="console-title">
-                    🚦 AI TRAFFIC INTELLIGENCE
-                </p>
-
-                <p class="console-sub">
-                    YOLO11 · ByteTrack · License Plate OCR
-                </p>
-
+            <div style="
+                font-family:monospace;
+                font-size:23px;
+                font-weight:700;
+                letter-spacing:0.6px;
+                color:#E7EDF3;
+            ">
+                🚦 AI TRAFFIC INTELLIGENCE
             </div>
 
-            <div class="live-badge">
+            <div style="
+                margin-top:7px;
+                font-family:Arial,sans-serif;
+                font-size:13px;
+                color:#8B9AA8;
+                letter-spacing:0.4px;
+            ">
+                YOLO11 · ByteTrack · License Plate OCR
+            </div>
 
-                <span class="live-dot"></span>
+            <div style="
+                display:inline-flex;
+                align-items:center;
+                gap:8px;
+                margin-top:14px;
+                padding:6px 13px;
+                border:1px solid rgba(0,230,195,0.35);
+                border-radius:20px;
+                background:rgba(0,230,195,0.06);
+                color:#00E6C3;
+                font-family:monospace;
+                font-size:11px;
+                font-weight:600;
+                letter-spacing:1px;
+            ">
+                <span style="
+                    display:inline-block;
+                    width:8px;
+                    height:8px;
+                    border-radius:50%;
+                    background:#00E6C3;
+                    box-shadow:0 0 8px rgba(0,230,195,0.8);
+                "></span>
 
                 SYSTEM READY
-
             </div>
 
         </div>
@@ -433,7 +372,7 @@ def kpi_html(label, value, accent=False):
 
 
 # =========================================================
-# START UI
+# INITIAL UI
 # =========================================================
 
 inject_theme()
@@ -470,7 +409,7 @@ def load_models():
 
 
 # =========================================================
-# CLEAN OCR TEXT
+# OCR CLEANING
 # =========================================================
 
 def clean_text(text):
@@ -545,8 +484,7 @@ if file_size_mb > 200:
 
 
 st.success(
-    f"Loaded: {uploaded.name} · "
-    f"{file_size_mb:.1f} MB"
+    f"Loaded: {uploaded.name} · {file_size_mb:.1f} MB"
 )
 
 
@@ -623,7 +561,7 @@ total_frames = int(
 
 
 # =========================================================
-# VARIABLES
+# PROCESSING VARIABLES
 # =========================================================
 
 frame_number = 0
@@ -637,10 +575,8 @@ plate_data = {}
 last_ocr = {}
 
 
-# Process every 3rd frame
 FRAME_SKIP = 3
 
-# OCR every 45 processed frames
 OCR_INTERVAL = 45
 
 
@@ -699,7 +635,7 @@ plate_display = st.empty()
 
 
 # =========================================================
-# PROCESS VIDEO
+# VIDEO PROCESSING
 # =========================================================
 
 while True:
@@ -715,10 +651,6 @@ while True:
     frame_number += 1
 
 
-    # -----------------------------------------------------
-    # FRAME SKIPPING
-    # -----------------------------------------------------
-
     if frame_number % FRAME_SKIP != 0:
 
         continue
@@ -727,24 +659,17 @@ while True:
     processed_frames += 1
 
 
-    # -----------------------------------------------------
-    # YOLO TRACKING
-    # -----------------------------------------------------
+    # =====================================================
+    # VEHICLE TRACKING
+    # =====================================================
 
     results = vehicle_model.track(
-
         frame,
-
         persist=True,
-
         tracker="bytetrack.yaml",
-
         conf=0.40,
-
         iou=0.5,
-
         verbose=False
-
     )
 
 
@@ -763,7 +688,7 @@ while True:
 
 
     # =====================================================
-    # DETECTIONS
+    # VEHICLE DETECTIONS
     # =====================================================
 
     if result.boxes is not None:
@@ -816,9 +741,9 @@ while True:
                 )
 
 
-                # -------------------------------------------------
+                # =================================================
                 # VEHICLE TYPE
-                # -------------------------------------------------
+                # =================================================
 
                 if cls == 2:
 
@@ -853,9 +778,9 @@ while True:
                     continue
 
 
-                # -------------------------------------------------
-                # BOUNDING BOX
-                # -------------------------------------------------
+                # =================================================
+                # BOX
+                # =================================================
 
                 x1, y1, x2, y2 = box
 
@@ -913,7 +838,6 @@ while True:
                         vehicle_id
                     ]
                     >= OCR_INTERVAL
-
                 )
 
 
@@ -931,13 +855,9 @@ while True:
                     try:
 
                         plate_results = plate_model(
-
                             crop,
-
                             conf=0.50,
-
                             verbose=False
-
                         )
 
 
@@ -1002,22 +922,21 @@ while True:
                                 ]
 
 
-                                if (
-                                    plate_crop.size
-                                    == 0
-                                ):
+                                if plate_crop.size == 0:
 
                                     continue
 
 
-                                # -------------------------------------------------
-                                # EASY OCR
-                                # -------------------------------------------------
+                                try:
 
-                                ocr_results = reader.readtext(
-                                    plate_crop,
-                                    detail=1
-                                )
+                                    ocr_results = reader.readtext(
+                                        plate_crop,
+                                        detail=1
+                                    )
+
+                                except Exception:
+
+                                    ocr_results = []
 
 
                                 best_text = ""
@@ -1026,6 +945,11 @@ while True:
 
 
                                 for item in ocr_results:
+
+                                    if len(item) < 3:
+
+                                        continue
+
 
                                     text = clean_text(
                                         item[1]
@@ -1046,10 +970,6 @@ while True:
 
                                         best_conf = confidence
 
-
-                                # -------------------------------------------------
-                                # SAVE BEST RESULT
-                                # -------------------------------------------------
 
                                 if best_text:
 
@@ -1080,28 +1000,21 @@ while True:
 
                                         }
 
-
                     except Exception:
 
                         pass
 
 
                 # =================================================
-                # DRAW VEHICLE BOX
+                # VEHICLE BOX
                 # =================================================
 
                 cv2.rectangle(
-
                     frame,
-
                     (x1, y1),
-
                     (x2, y2),
-
                     (195, 230, 0),
-
                     2
-
                 )
 
 
@@ -1116,11 +1029,8 @@ while True:
 
 
                 cv2.putText(
-
                     frame,
-
                     label,
-
                     (
                         x1,
                         max(
@@ -1128,15 +1038,10 @@ while True:
                             y1 - 8
                         )
                     ),
-
                     cv2.FONT_HERSHEY_SIMPLEX,
-
                     0.55,
-
                     (195, 230, 0),
-
                     2
-
                 )
 
 
@@ -1144,10 +1049,7 @@ while True:
                 # PLATE LABEL
                 # =================================================
 
-                if (
-                    vehicle_id
-                    in plate_data
-                ):
+                if vehicle_id in plate_data:
 
                     plate_text = (
                         plate_data[
@@ -1159,11 +1061,8 @@ while True:
 
 
                     cv2.putText(
-
                         frame,
-
                         f"Plate: {plate_text}",
-
                         (
                             x1,
                             min(
@@ -1171,38 +1070,25 @@ while True:
                                 y2 + 22
                             )
                         ),
-
                         cv2.FONT_HERSHEY_SIMPLEX,
-
                         0.55,
-
                         (32, 176, 255),
-
                         2
-
                     )
 
 
     # =====================================================
-    # FRAME INFORMATION
+    # TRACKING TEXT
     # =====================================================
 
     cv2.putText(
-
         frame,
-
         f"Currently Tracked: {len(current_ids)}",
-
         (20, 35),
-
         cv2.FONT_HERSHEY_SIMPLEX,
-
         0.75,
-
         (195, 230, 0),
-
         2
-
     )
 
 
@@ -1211,92 +1097,70 @@ while True:
     # =====================================================
 
     rgb = cv2.cvtColor(
-
         frame,
-
         cv2.COLOR_BGR2RGB
-
     )
 
 
     video_display.image(
-
         rgb,
-
         channels="RGB",
-
         use_container_width=True
-
     )
 
 
     # =====================================================
-    # KPI CARDS
+    # KPI
     # =====================================================
 
     tracked_box.markdown(
-
         kpi_html(
             "Currently Tracked",
             len(current_ids),
             True
         ),
-
         unsafe_allow_html=True
-
     )
 
 
     cars_box.markdown(
-
         kpi_html(
             "Cars",
             cars
         ),
-
         unsafe_allow_html=True
-
     )
 
 
     bikes_box.markdown(
-
         kpi_html(
             "Motorcycles",
             motorcycles
         ),
-
         unsafe_allow_html=True
-
     )
 
 
     buses_box.markdown(
-
         kpi_html(
             "Buses",
             buses
         ),
-
         unsafe_allow_html=True
-
     )
 
 
     trucks_box.markdown(
-
         kpi_html(
             "Trucks",
             trucks
         ),
-
         unsafe_allow_html=True
-
     )
 
 
     # =====================================================
-    # LIVE PLATE TABLE
+    # PLATE TABLE
     # =====================================================
 
     if plate_data:
@@ -1352,13 +1216,9 @@ while True:
 
 
         plate_display.dataframe(
-
             plate_df,
-
             use_container_width=True,
-
             hide_index=True,
-
             column_config={
 
                 "Vehicle ID":
@@ -1376,9 +1236,7 @@ while True:
                         "Confidence",
                         format="%.2f"
                     )
-
             }
-
         )
 
 
@@ -1396,17 +1254,10 @@ while True:
     if total_frames > 0:
 
         progress.progress(
-
             min(
-
-                frame_number
-                /
-                total_frames,
-
+                frame_number / total_frames,
                 1.0
-
             )
-
         )
 
 
@@ -1415,7 +1266,6 @@ while True:
     # =====================================================
 
     status.markdown(
-
         f"""
         <div class="status-line">
 
@@ -1431,9 +1281,7 @@ while True:
 
         </div>
         """,
-
         unsafe_allow_html=True
-
     )
 
 
@@ -1442,7 +1290,6 @@ while True:
 # =========================================================
 
 cap.release()
-
 
 progress.progress(1.0)
 
@@ -1470,44 +1317,35 @@ a, b, c = st.columns(3)
 
 
 a.markdown(
-
     kpi_html(
         "Track IDs Observed",
         len(all_ids),
         True
     ),
-
     unsafe_allow_html=True
-
 )
 
 
 b.markdown(
-
     kpi_html(
         "License Plates Recognized",
         len(plate_data)
     ),
-
     unsafe_allow_html=True
-
 )
 
 
 c.markdown(
-
     kpi_html(
         "Frames Processed",
         processed_frames
     ),
-
     unsafe_allow_html=True
-
 )
 
 
 # =========================================================
-# FINAL LICENSE PLATE TABLE
+# FINAL PLATE RESULTS
 # =========================================================
 
 st.markdown(
@@ -1569,13 +1407,9 @@ if plate_data:
 
 
     st.dataframe(
-
         final_df,
-
         use_container_width=True,
-
         hide_index=True,
-
         column_config={
 
             "Vehicle ID":
@@ -1593,10 +1427,9 @@ if plate_data:
                     "Confidence",
                     format="%.2f"
                 )
-
         }
-
     )
+
 
 else:
 
