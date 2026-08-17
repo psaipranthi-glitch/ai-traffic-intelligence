@@ -1,4 +1,3 @@
-```toml
 [theme]
 base = "dark"
 primaryColor = "#00E6C3"
@@ -6,8 +5,3 @@ backgroundColor = "#0A0E13"
 secondaryBackgroundColor = "#10161D"
 textColor = "#E7EDF3"
 font = "monospace"
-
-[server]
-maxUploadSize = 150
-maxMessageSize = 150
-```
