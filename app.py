@@ -247,12 +247,10 @@ def render_header():
 
 def kpi_html(label, value, accent=False):
     cls = "kpi-value accent" if accent else "kpi-value"
-    return f"""
-    <div class="kpi">
-        <div class="kpi-label">{label}</div>
-        <div class="{cls}">{value}</div>
-    </div>
-    """
+    return (
+        f'<div class="kpi"><div class="kpi-label">{label}</div>'
+        f'<div class="{cls}">{value}</div></div>'
+    )
 
 
 def plate_table_html(plate_data):
@@ -261,24 +259,17 @@ def plate_table_html(plate_data):
 
     rows = ""
     for vehicle_id, data in plate_data.items():
-        rows += f"""
-        <tr>
-            <td>#{vehicle_id}</td>
-            <td>{data['text']}</td>
-            <td>{data['confidence']:.2f}</td>
-        </tr>
-        """
+        rows += (
+            f"<tr><td>#{vehicle_id}</td>"
+            f"<td>{data['text']}</td>"
+            f"<td>{data['confidence']:.2f}</td></tr>"
+        )
 
-    return f"""
-    <div class="plate-log">
-        <table>
-            <thead>
-                <tr><th>Vehicle ID</th><th>License Plate</th><th>Confidence</th></tr>
-            </thead>
-            <tbody>{rows}</tbody>
-        </table>
-    </div>
-    """
+    return (
+        '<div class="plate-log"><table><thead>'
+        "<tr><th>Vehicle ID</th><th>License Plate</th><th>Confidence</th></tr>"
+        f"</thead><tbody>{rows}</tbody></table></div>"
+    )
 
 
 inject_theme()
