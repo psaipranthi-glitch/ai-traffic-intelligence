@@ -32,22 +32,37 @@ def inject_theme():
             'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap'
         );
 
+
+        /* =================================================
+           ROOT
+           ================================================= */
+
         :root {
             --bg: #0A0E13;
             --panel: #10161D;
             --border: #26323D;
             --text: #E7EDF3;
             --muted: #8B9AA8;
+            --dim: #586774;
             --cyan: #00E6C3;
         }
+
+
+        /* =================================================
+           GLOBAL
+           ================================================= */
 
         html,
         body,
         [class*="css"] {
-            font-family: 'IBM Plex Sans', sans-serif;
+            font-family:
+                'IBM Plex Sans',
+                sans-serif;
         }
 
+
         .stApp {
+
             background:
                 radial-gradient(
                     circle at 15% 0%,
@@ -57,22 +72,28 @@ def inject_theme():
                 #0A0E13;
         }
 
+
         header[data-testid="stHeader"] {
             background: transparent;
         }
 
+
         .block-container {
+
             max-width: 1400px;
+
             padding-top: 3.2rem;
+
             padding-bottom: 3rem;
         }
 
 
         /* =================================================
-           HEADER
+           MAIN HEADER
            ================================================= */
 
         .main-header {
+
             background:
                 linear-gradient(
                     135deg,
@@ -80,7 +101,9 @@ def inject_theme():
                     rgba(10,14,19,0.98)
                 );
 
-            border: 1px solid #26323D;
+            border:
+                1px solid
+                #26323D;
 
             border-radius: 10px;
 
@@ -93,10 +116,13 @@ def inject_theme():
             box-sizing: border-box;
 
             box-shadow:
-                0 8px 30px rgba(0,0,0,0.18);
+                0 8px 30px
+                rgba(0,0,0,0.18);
         }
 
+
         .header-title {
+
             display: flex;
 
             align-items: center;
@@ -116,13 +142,17 @@ def inject_theme():
             color: #E7EDF3;
         }
 
+
         .header-icon {
+
             color: #00E6C3;
 
             font-size: 25px;
         }
 
+
         .header-subtitle {
+
             margin-top: 8px;
 
             font-family:
@@ -136,7 +166,9 @@ def inject_theme():
             letter-spacing: 0.4px;
         }
 
+
         .header-status-row {
+
             display: flex;
 
             align-items: center;
@@ -146,7 +178,9 @@ def inject_theme():
             margin-top: 16px;
         }
 
+
         .system-status {
+
             display: inline-flex;
 
             align-items: center;
@@ -177,7 +211,9 @@ def inject_theme():
             letter-spacing: 1px;
         }
 
+
         .status-dot {
+
             display: inline-block;
 
             width: 8px;
@@ -193,7 +229,9 @@ def inject_theme():
                 rgba(0,230,195,0.8);
         }
 
+
         .engine-status {
+
             font-family:
                 'JetBrains Mono',
                 monospace;
@@ -211,11 +249,14 @@ def inject_theme():
            ================================================= */
 
         .section-label {
+
             margin: 25px 0 12px 0;
 
             padding-left: 10px;
 
-            border-left: 2px solid #00E6C3;
+            border-left:
+                2px solid
+                #00E6C3;
 
             font-family:
                 'JetBrains Mono',
@@ -234,31 +275,11 @@ def inject_theme():
 
 
         /* =================================================
-           SECTION DESCRIPTION
-           ================================================= */
-
-        .section-description {
-            margin-top: -3px;
-
-            margin-bottom: 10px;
-
-            font-family:
-                'IBM Plex Sans',
-                sans-serif;
-
-            font-size: 12px;
-
-            color: #586774;
-
-            letter-spacing: 0.3px;
-        }
-
-
-        /* =================================================
            FILE UPLOADER
            ================================================= */
 
         [data-testid="stFileUploader"] {
+
             background:
                 rgba(16,22,29,0.90);
 
@@ -270,12 +291,16 @@ def inject_theme():
 
             padding: 12px;
 
+            margin-top: 0;
+
             transition:
                 border-color 0.2s ease,
                 background 0.2s ease;
         }
 
+
         [data-testid="stFileUploader"]:hover {
+
             border-color:
                 rgba(0,230,195,0.45);
 
@@ -283,7 +308,9 @@ def inject_theme():
                 rgba(16,22,29,0.98);
         }
 
+
         [data-testid="stFileUploaderDropzone"] {
+
             background:
                 rgba(10,14,19,0.55);
 
@@ -292,21 +319,11 @@ def inject_theme():
 
 
         /* =================================================
-           UPLOAD TEXT
-           ================================================= */
-
-        [data-testid="stFileUploaderDropzone"] div {
-            font-family:
-                'IBM Plex Sans',
-                sans-serif;
-        }
-
-
-        /* =================================================
            KPI
            ================================================= */
 
         .kpi {
+
             min-height: 88px;
 
             padding: 15px 17px;
@@ -323,7 +340,9 @@ def inject_theme():
             box-sizing: border-box;
         }
 
+
         .kpi-label {
+
             margin-bottom: 7px;
 
             font-family:
@@ -341,7 +360,9 @@ def inject_theme():
             color: #8B9AA8;
         }
 
+
         .kpi-value {
+
             font-family:
                 'JetBrains Mono',
                 monospace;
@@ -353,7 +374,9 @@ def inject_theme():
             color: #E7EDF3;
         }
 
+
         .kpi-value.accent {
+
             color: #00E6C3;
         }
 
@@ -363,6 +386,7 @@ def inject_theme():
            ================================================= */
 
         [data-testid="stImage"] {
+
             width: 100%;
 
             padding: 7px;
@@ -382,6 +406,7 @@ def inject_theme():
            ================================================= */
 
         .stButton > button {
+
             width: 100%;
 
             margin-top: 8px;
@@ -408,7 +433,9 @@ def inject_theme():
             letter-spacing: 0.5px;
         }
 
+
         .stButton > button:hover {
+
             background:
                 rgba(0,230,195,0.16);
 
@@ -425,6 +452,7 @@ def inject_theme():
            ================================================= */
 
         [data-testid="stDataFrame"] {
+
             border:
                 1px solid
                 #26323D;
@@ -438,62 +466,11 @@ def inject_theme():
 
 
         /* =================================================
-           EMPTY STATE
-           ================================================= */
-
-        .empty-state {
-            padding: 22px;
-
-            margin-top: 10px;
-
-            text-align: center;
-
-            background:
-                rgba(16,22,29,0.55);
-
-            border:
-                1px dashed
-                #26323D;
-
-            border-radius: 7px;
-
-            font-family:
-                'JetBrains Mono',
-                monospace;
-
-            font-size: 11px;
-
-            letter-spacing: 0.8px;
-
-            color: #8B9AA8;
-        }
-
-        .empty-title {
-            font-size: 13px;
-
-            font-weight: 600;
-
-            letter-spacing: 0.8px;
-
-            color: #E7EDF3;
-
-            margin-bottom: 6px;
-        }
-
-        .empty-description {
-            font-size: 11px;
-
-            color: #8B9AA8;
-
-            letter-spacing: 0.5px;
-        }
-
-
-        /* =================================================
            STATUS
            ================================================= */
 
         .status-line {
+
             margin-top: 7px;
 
             font-family:
@@ -509,11 +486,24 @@ def inject_theme():
 
 
         /* =================================================
-           SUCCESS MESSAGE
+           STREAMLIT ALERTS
            ================================================= */
 
         [data-testid="stAlert"] {
+
             border-radius: 7px;
+        }
+
+
+        /* =================================================
+           SPINNER
+           ================================================= */
+
+        [data-testid="stSpinner"] {
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
         }
 
         </style>
@@ -667,10 +657,6 @@ st.markdown(
     <div class="section-label">
         Input Feed
     </div>
-
-    <div class="section-description">
-        200MB per file &nbsp;•&nbsp; MP4, AVI, MOV, MKV
-    </div>
     """,
     unsafe_allow_html=True
 )
@@ -693,23 +679,6 @@ uploaded = st.file_uploader(
 # =========================================================
 
 if uploaded is None:
-
-    st.markdown(
-        """
-        <div class="empty-state">
-
-            <div class="empty-title">
-                READY FOR VIDEO INPUT
-            </div>
-
-            <div class="empty-description">
-                Upload a traffic video to begin AI analysis
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
 
     st.stop()
 
