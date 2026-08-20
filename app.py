@@ -281,60 +281,104 @@ def render_header():
     st.markdown(
         """
         <div style="
-            background:#10161D;
+            background:linear-gradient(
+                135deg,
+                rgba(16,22,29,0.98),
+                rgba(10,14,19,0.98)
+            );
             border:1px solid #26323D;
-            border-radius:8px;
-            padding:20px 24px;
+            border-radius:10px;
+            padding:22px 26px;
             margin-bottom:28px;
             width:100%;
             box-sizing:border-box;
+            box-shadow:0 8px 30px rgba(0,0,0,0.18);
         ">
 
             <div style="
-                font-family:monospace;
+                display:flex;
+                align-items:center;
+                gap:12px;
+                font-family:'JetBrains Mono',monospace;
                 font-size:23px;
                 font-weight:700;
                 letter-spacing:0.6px;
                 color:#E7EDF3;
             ">
-                🚦 AI TRAFFIC INTELLIGENCE
+
+                <span style="
+                    color:#00E6C3;
+                    font-size:25px;
+                ">🚦</span>
+
+                AI TRAFFIC INTELLIGENCE
+
             </div>
 
+
             <div style="
-                margin-top:7px;
-                font-family:Arial,sans-serif;
+                margin-top:8px;
+                font-family:'IBM Plex Sans',sans-serif;
                 font-size:13px;
                 color:#8B9AA8;
                 letter-spacing:0.4px;
             ">
+
+                Real-time traffic monitoring powered by
                 YOLO11 · ByteTrack · License Plate OCR
+
             </div>
 
-            <div style="
-                display:inline-flex;
-                align-items:center;
-                gap:8px;
-                margin-top:14px;
-                padding:6px 13px;
-                border:1px solid rgba(0,230,195,0.35);
-                border-radius:20px;
-                background:rgba(0,230,195,0.06);
-                color:#00E6C3;
-                font-family:monospace;
-                font-size:11px;
-                font-weight:600;
-                letter-spacing:1px;
-            ">
-                <span style="
-                    display:inline-block;
-                    width:8px;
-                    height:8px;
-                    border-radius:50%;
-                    background:#00E6C3;
-                    box-shadow:0 0 8px rgba(0,230,195,0.8);
-                "></span>
 
-                SYSTEM READY
+            <div style="
+                display:flex;
+                align-items:center;
+                gap:14px;
+                margin-top:16px;
+            ">
+
+
+                <div style="
+                    display:inline-flex;
+                    align-items:center;
+                    gap:8px;
+                    padding:6px 13px;
+                    border:1px solid rgba(0,230,195,0.35);
+                    border-radius:20px;
+                    background:rgba(0,230,195,0.06);
+                    color:#00E6C3;
+                    font-family:'JetBrains Mono',monospace;
+                    font-size:11px;
+                    font-weight:600;
+                    letter-spacing:1px;
+                ">
+
+                    <span style="
+                        display:inline-block;
+                        width:8px;
+                        height:8px;
+                        border-radius:50%;
+                        background:#00E6C3;
+                        box-shadow:
+                            0 0 8px rgba(0,230,195,0.8);
+                    "></span>
+
+                    SYSTEM ONLINE
+
+                </div>
+
+
+                <div style="
+                    font-family:'JetBrains Mono',monospace;
+                    font-size:10px;
+                    color:#586774;
+                    letter-spacing:0.8px;
+                ">
+
+                    MULTIMODAL VISION ENGINE
+
+                </div>
+
             </div>
 
         </div>
