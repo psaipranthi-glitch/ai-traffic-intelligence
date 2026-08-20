@@ -1,7 +1,10 @@
-import streamlit as st
-import cv2
+import os
 import re
+import tempfile
+
+import cv2
 import pandas as pd
+import streamlit as st
 from ultralytics import YOLO
 import easyocr
 
@@ -38,32 +41,47 @@ def inject_theme():
             --panel-2: #111920;
             --border: #202B35;
             --border-light: #2B3945;
+
             --text: #E8EEF3;
             --muted: #7F8D99;
+            --dim: #53616D;
+
             --cyan: #00E6C3;
             --blue: #4DA3FF;
             --orange: #FFB454;
+            --red: #FF5555;
         }
+
+
+        /* =====================================================
+           GLOBAL
+           ===================================================== */
 
         html,
         body,
         [class*="css"] {
-            font-family: 'IBM Plex Sans', sans-serif;
+            font-family:
+                'IBM Plex Sans',
+                sans-serif;
         }
 
         .stApp {
+
             background:
                 radial-gradient(
                     circle at 5% 0%,
                     rgba(0,230,195,0.07),
                     transparent 28%
                 ),
+
                 radial-gradient(
                     circle at 95% 10%,
                     rgba(77,163,255,0.045),
                     transparent 25%
                 ),
+
                 #070B0F;
+
             color: var(--text);
         }
 
@@ -80,20 +98,27 @@ def inject_theme():
         }
 
         .block-container {
+
             max-width: 1450px;
+
             padding-top: 2rem;
             padding-bottom: 4rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
         }
 
 
         /* =====================================================
-           HERO HEADER
+           HERO
            ===================================================== */
 
         .hero {
+
             position: relative;
-            padding: 25px 28px;
-            margin-bottom: 22px;
+
+            padding: 26px 28px;
+
+            margin-bottom: 24px;
 
             background:
                 linear-gradient(
@@ -103,7 +128,9 @@ def inject_theme():
                 );
 
             border: 1px solid var(--border);
+
             border-radius: 12px;
+
             overflow: hidden;
 
             box-shadow:
@@ -111,6 +138,7 @@ def inject_theme():
         }
 
         .hero::before {
+
             content: "";
 
             position: absolute;
@@ -129,29 +157,37 @@ def inject_theme():
                     transparent
                 );
 
-            opacity: 0.75;
+            opacity: 0.8;
         }
 
         .hero-grid {
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: flex-start;
-            gap: 20px;
+
+            gap: 25px;
         }
 
         .hero-title {
+
             font-family:
                 'JetBrains Mono',
                 monospace;
 
             font-size: 26px;
+
             font-weight: 700;
+
             letter-spacing: 0.5px;
 
             color: var(--text);
         }
 
         .hero-subtitle {
+
             margin-top: 8px;
 
             font-size: 13px;
@@ -162,17 +198,22 @@ def inject_theme():
         }
 
         .hero-tech {
-            margin-top: 12px;
+
+            margin-top: 13px;
 
             display: flex;
+
             gap: 8px;
+
             flex-wrap: wrap;
         }
 
         .tech {
-            padding: 4px 9px;
+
+            padding: 5px 10px;
 
             border: 1px solid var(--border-light);
+
             border-radius: 5px;
 
             background:
@@ -185,13 +226,16 @@ def inject_theme():
                 monospace;
 
             font-size: 9px;
+
             letter-spacing: 0.8px;
         }
 
         .system-status {
+
             display: inline-flex;
 
             align-items: center;
+
             gap: 9px;
 
             padding: 8px 13px;
@@ -211,13 +255,16 @@ def inject_theme():
                 monospace;
 
             font-size: 10px;
+
             font-weight: 600;
+
             letter-spacing: 1px;
 
             white-space: nowrap;
         }
 
         .status-dot {
+
             width: 7px;
             height: 7px;
 
@@ -236,17 +283,22 @@ def inject_theme():
            ===================================================== */
 
         .section-header {
+
             display: flex;
 
             align-items: center;
+
             gap: 10px;
 
-            margin-top: 28px;
-            margin-bottom: 12px;
+            margin-top: 30px;
+
+            margin-bottom: 13px;
         }
 
         .section-line {
+
             width: 3px;
+
             height: 18px;
 
             border-radius: 2px;
@@ -258,11 +310,13 @@ def inject_theme():
         }
 
         .section-title {
+
             font-family:
                 'JetBrains Mono',
                 monospace;
 
             font-size: 11px;
+
             font-weight: 600;
 
             letter-spacing: 1.7px;
@@ -273,6 +327,7 @@ def inject_theme():
         }
 
         .section-meta {
+
             margin-left: auto;
 
             font-family:
@@ -281,108 +336,9 @@ def inject_theme():
 
             font-size: 9px;
 
-            color: #53616D;
+            color: var(--dim);
 
             letter-spacing: 0.8px;
-        }
-
-
-        /* =====================================================
-           METRIC CARDS
-           ===================================================== */
-
-        .metric-card {
-            min-height: 102px;
-
-            padding: 17px 18px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(17,25,32,0.96),
-                    rgba(11,16,21,0.96)
-                );
-
-            border: 1px solid var(--border);
-
-            border-radius: 9px;
-
-            position: relative;
-
-            overflow: hidden;
-
-            transition:
-                border-color .2s ease,
-                transform .2s ease;
-        }
-
-        .metric-card:hover {
-            border-color:
-                rgba(0,230,195,0.35);
-
-            transform: translateY(-1px);
-        }
-
-        .metric-card::after {
-            content: "";
-
-            position: absolute;
-
-            right: -25px;
-            bottom: -30px;
-
-            width: 90px;
-            height: 90px;
-
-            border-radius: 50%;
-
-            background:
-                rgba(0,230,195,0.035);
-        }
-
-        .metric-label {
-            font-family:
-                'JetBrains Mono',
-                monospace;
-
-            font-size: 9px;
-            font-weight: 500;
-
-            letter-spacing: 1.2px;
-
-            text-transform: uppercase;
-
-            color: #687782;
-        }
-
-        .metric-value {
-            margin-top: 10px;
-
-            font-family:
-                'JetBrains Mono',
-                monospace;
-
-            font-size: 28px;
-            line-height: 1;
-
-            font-weight: 600;
-
-            color: var(--text);
-        }
-
-        .metric-value.accent {
-            color: var(--cyan);
-
-            text-shadow:
-                0 0 18px rgba(0,230,195,0.15);
-        }
-
-        .metric-icon {
-            float: right;
-
-            font-size: 16px;
-
-            opacity: 0.55;
         }
 
 
@@ -391,6 +347,7 @@ def inject_theme():
            ===================================================== */
 
         .upload-panel {
+
             padding: 18px;
 
             background:
@@ -399,14 +356,18 @@ def inject_theme():
             border: 1px solid var(--border);
 
             border-radius: 9px;
+
+            margin-bottom: 10px;
         }
 
         .upload-title {
+
             font-family:
                 'JetBrains Mono',
                 monospace;
 
             font-size: 11px;
+
             font-weight: 600;
 
             letter-spacing: 1px;
@@ -415,202 +376,81 @@ def inject_theme():
         }
 
         .upload-description {
-            margin-top: 5px;
+
+            margin-top: 6px;
 
             font-size: 11px;
+
+            line-height: 1.6;
 
             color: var(--muted);
         }
 
-        [data-testid="stFileUploader"] {
-            margin-top: 12px;
-
-            background:
-                rgba(255,255,255,0.015);
-
-            border: 1px dashed #33414D;
-
-            border-radius: 8px;
-
-            padding: 14px;
-        }
-
-        [data-testid="stFileUploader"]:hover {
-            border-color:
-                rgba(0,230,195,0.45);
-        }
-
-        [data-testid="stFileUploaderDropzone"] {
-            background: transparent;
-        }
-
-
-        /* =====================================================
-           BUTTON
-           ===================================================== */
-
-        .stButton > button {
-            width: 100%;
-
-            min-height: 44px;
+        .upload-meta {
 
             margin-top: 10px;
-
-            border:
-                1px solid rgba(0,230,195,0.55);
-
-            border-radius: 7px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(0,230,195,0.13),
-                    rgba(0,230,195,0.045)
-                );
-
-            color: var(--cyan);
-
-            font-family:
-                'JetBrains Mono',
-                monospace;
-
-            font-size: 11px;
-            font-weight: 600;
-
-            letter-spacing: 0.7px;
-
-            transition: all .2s ease;
-        }
-
-        .stButton > button:hover {
-            border-color: var(--cyan);
-
-            background:
-                rgba(0,230,195,0.14);
-
-            box-shadow:
-                0 0 20px rgba(0,230,195,0.08);
-
-            color: var(--cyan);
-        }
-
-
-        /* =====================================================
-           LIVE FEED
-           ===================================================== */
-
-        .feed-container {
-            position: relative;
-
-            padding: 7px;
-
-            background: #090E13;
-
-            border: 1px solid var(--border);
-
-            border-radius: 10px;
-
-            box-shadow:
-                inset 0 0 30px rgba(0,0,0,0.35);
-        }
-
-        .live-badge {
-            display: inline-flex;
-
-            align-items: center;
-            gap: 7px;
-
-            padding: 5px 9px;
-
-            margin-bottom: 8px;
-
-            border-radius: 4px;
-
-            background:
-                rgba(7,11,15,0.85);
-
-            border: 1px solid
-                rgba(255,70,70,0.3);
-
-            color: #FF7777;
 
             font-family:
                 'JetBrains Mono',
                 monospace;
 
             font-size: 9px;
-            font-weight: 600;
 
-            letter-spacing: 1px;
-        }
+            letter-spacing: 0.6px;
 
-        .live-dot {
-            width: 6px;
-            height: 6px;
-
-            border-radius: 50%;
-
-            background: #FF5555;
-
-            box-shadow:
-                0 0 9px rgba(255,70,70,0.7);
-        }
-
-        [data-testid="stImage"] {
-            width: 100%;
-
-            padding: 0;
-
-            background: #080C10;
-
-            border: 0;
-
-            border-radius: 6px;
-
-            overflow: hidden;
-        }
-
-        [data-testid="stImage"] img {
-            border-radius: 5px;
+            color: var(--dim);
         }
 
 
         /* =====================================================
-           PLATE TABLE
+           FILE UPLOADER
            ===================================================== */
 
-        .plate-panel {
+        [data-testid="stFileUploader"] {
+
             background:
-                rgba(13,19,25,0.9);
+                rgba(13,19,25,0.85);
 
-            border: 1px solid var(--border);
+            border: 1px dashed #33414D;
 
-            border-radius: 9px;
+            border-radius: 8px;
 
-            padding: 5px;
+            padding: 14px;
+
+            margin-top: 8px;
         }
 
-        [data-testid="stDataFrame"] {
-            border:
-                1px solid var(--border);
+        [data-testid="stFileUploader"]:hover {
 
-            border-radius: 7px;
+            border-color:
+                rgba(0,230,195,0.45);
+        }
 
-            overflow: hidden;
+        [data-testid="stFileUploaderDropzone"] {
+
+            background:
+                rgba(255,255,255,0.01);
+        }
+
+        [data-testid="stFileUploaderDropzoneInstructions"] {
+
+            color: var(--muted);
         }
 
 
         /* =====================================================
-           STATUS BAR
+           FILE READY
            ===================================================== */
 
-        .status-bar {
+        .file-ready {
+
             display: flex;
 
             align-items: center;
-            gap: 8px;
 
-            margin-top: 9px;
+            gap: 10px;
+
+            margin-top: 10px;
 
             padding: 9px 12px;
 
@@ -629,11 +469,14 @@ def inject_theme():
 
             color: #697883;
 
-            letter-spacing: 0.6px;
+            letter-spacing: 0.5px;
         }
 
-        .status-active {
+        .file-ready-status {
+
             color: var(--cyan);
+
+            font-weight: 600;
         }
 
 
@@ -642,7 +485,8 @@ def inject_theme():
            ===================================================== */
 
         .empty-state {
-            padding: 38px 20px;
+
+            padding: 42px 20px;
 
             text-align: center;
 
@@ -666,21 +510,325 @@ def inject_theme():
         }
 
         .empty-icon {
-            font-size: 27px;
 
-            margin-bottom: 10px;
+            font-size: 28px;
+
+            margin-bottom: 11px;
+
+            opacity: 0.55;
+        }
+
+        .empty-description {
+
+            margin-top: 9px;
+
+            font-family:
+                'IBM Plex Sans',
+                sans-serif;
+
+            font-size: 11px;
+
+            letter-spacing: 0;
+
+            color: var(--dim);
+        }
+
+
+        /* =====================================================
+           BUTTON
+           ===================================================== */
+
+        .stButton > button {
+
+            width: 100%;
+
+            min-height: 46px;
+
+            margin-top: 11px;
+
+            border:
+                1px solid rgba(0,230,195,0.55);
+
+            border-radius: 7px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(0,230,195,0.13),
+                    rgba(0,230,195,0.045)
+                );
+
+            color: var(--cyan);
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.7px;
+
+            transition: all .2s ease;
+        }
+
+        .stButton > button:hover {
+
+            border-color: var(--cyan);
+
+            background:
+                rgba(0,230,195,0.14);
+
+            box-shadow:
+                0 0 20px rgba(0,230,195,0.08);
+
+            color: var(--cyan);
+        }
+
+
+        /* =====================================================
+           LIVE FEED
+           ===================================================== */
+
+        .live-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 5px 9px;
+
+            margin-bottom: 8px;
+
+            border-radius: 4px;
+
+            background:
+                rgba(7,11,15,0.85);
+
+            border:
+                1px solid rgba(255,70,70,0.3);
+
+            color: #FF7777;
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 9px;
+
+            font-weight: 600;
+
+            letter-spacing: 1px;
+        }
+
+        .live-dot {
+
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: var(--red);
+
+            box-shadow:
+                0 0 9px rgba(255,70,70,0.7);
+        }
+
+        [data-testid="stImage"] {
+
+            width: 100%;
+
+            padding: 7px;
+
+            background: #090E13;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 10px;
+
+            overflow: hidden;
+        }
+
+        [data-testid="stImage"] img {
+
+            width: 100%;
+
+            border-radius: 6px;
+        }
+
+
+        /* =====================================================
+           METRIC CARDS
+           ===================================================== */
+
+        .metric-card {
+
+            min-height: 100px;
+
+            padding: 17px 18px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(17,25,32,0.96),
+                    rgba(11,16,21,0.96)
+                );
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 9px;
+
+            position: relative;
+
+            overflow: hidden;
+
+            transition:
+                border-color .2s ease,
+                transform .2s ease;
+        }
+
+        .metric-card:hover {
+
+            border-color:
+                rgba(0,230,195,0.35);
+
+            transform: translateY(-1px);
+        }
+
+        .metric-card::after {
+
+            content: "";
+
+            position: absolute;
+
+            right: -25px;
+            bottom: -30px;
+
+            width: 90px;
+            height: 90px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(0,230,195,0.035);
+        }
+
+        .metric-label {
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 9px;
+
+            font-weight: 500;
+
+            letter-spacing: 1.2px;
+
+            text-transform: uppercase;
+
+            color: #687782;
+        }
+
+        .metric-value {
+
+            margin-top: 10px;
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 28px;
+
+            line-height: 1;
+
+            font-weight: 600;
+
+            color: var(--text);
+        }
+
+        .metric-value.accent {
+
+            color: var(--cyan);
+
+            text-shadow:
+                0 0 18px rgba(0,230,195,0.15);
+        }
+
+        .metric-icon {
+
+            float: right;
+
+            font-size: 16px;
 
             opacity: 0.55;
         }
 
 
         /* =====================================================
-           ALERTS
+           STATUS BAR
            ===================================================== */
 
-        .stAlert {
-            border-radius: 7px !important;
-            border: 1px solid var(--border) !important;
+        .status-bar {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            flex-wrap: wrap;
+
+            margin-top: 9px;
+
+            padding: 9px 12px;
+
+            background:
+                rgba(13,19,25,0.75);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 6px;
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 9px;
+
+            color: #697883;
+
+            letter-spacing: 0.6px;
+        }
+
+        .status-active {
+
+            color: var(--cyan);
+
+            font-weight: 600;
+        }
+
+
+        /* =====================================================
+           PLATE TABLE
+           ===================================================== */
+
+        [data-testid="stDataFrame"] {
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 8px;
+
+            overflow: hidden;
+
+            margin-top: 5px;
         }
 
 
@@ -689,11 +837,53 @@ def inject_theme():
            ===================================================== */
 
         [data-testid="stProgress"] {
+
             margin-top: 10px;
         }
 
         [data-testid="stProgressBar"] {
+
             background: #151D24;
+        }
+
+
+        /* =====================================================
+           ALERTS
+           ===================================================== */
+
+        .stAlert {
+
+            border-radius: 7px !important;
+
+            border:
+                1px solid var(--border) !important;
+        }
+
+
+        /* =====================================================
+           FOOTER
+           ===================================================== */
+
+        .app-footer {
+
+            margin-top: 48px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid var(--border);
+
+            text-align: center;
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 9px;
+
+            letter-spacing: 1px;
+
+            color: #46535E;
         }
 
 
@@ -704,16 +894,30 @@ def inject_theme():
         @media (max-width: 800px) {
 
             .block-container {
+
                 padding-left: 1rem;
+
                 padding-right: 1rem;
             }
 
             .hero-grid {
+
                 flex-direction: column;
             }
 
             .system-status {
+
                 align-self: flex-start;
+            }
+
+            .section-meta {
+
+                display: none;
+            }
+
+            .hero-title {
+
+                font-size: 21px;
             }
 
         }
@@ -796,9 +1000,9 @@ def section_header(title, meta=""):
     if meta:
 
         meta_html = f"""
-            <div class="section-meta">
-                {meta}
-            </div>
+        <div class="section-meta">
+            {meta}
+        </div>
         """
 
     st.markdown(
@@ -820,7 +1024,7 @@ def section_header(title, meta=""):
 
 
 # =========================================================
-# KPI
+# KPI CARD
 # =========================================================
 
 def kpi_html(
@@ -857,6 +1061,58 @@ def kpi_html(
 
 
 # =========================================================
+# PLATE DATAFRAME
+# =========================================================
+
+def create_plate_dataframe(plate_data):
+
+    rows = []
+
+    for vehicle_id, data in plate_data.items():
+
+        rows.append(
+            {
+                "Vehicle ID": f"#{vehicle_id}",
+                "License Plate": data["text"],
+                "Confidence": round(
+                    data["confidence"],
+                    2
+                )
+            }
+        )
+
+    if not rows:
+
+        return pd.DataFrame(
+            columns=[
+                "Vehicle ID",
+                "License Plate",
+                "Confidence"
+            ]
+        )
+
+    df = pd.DataFrame(rows)
+
+    df["_sort"] = (
+        df["Vehicle ID"]
+        .str.replace(
+            "#",
+            "",
+            regex=False
+        )
+        .astype(int)
+    )
+
+    df = (
+        df
+        .sort_values("_sort")
+        .drop(columns="_sort")
+    )
+
+    return df
+
+
+# =========================================================
 # INITIAL UI
 # =========================================================
 
@@ -866,11 +1122,23 @@ render_header()
 
 
 # =========================================================
-# LOAD MODELS
+# MODEL LOADING
 # =========================================================
 
 @st.cache_resource(show_spinner=False)
 def load_models():
+
+    if not os.path.exists("yolo11n.pt"):
+
+        raise FileNotFoundError(
+            "yolo11n.pt was not found."
+        )
+
+    if not os.path.exists("models/best.pt"):
+
+        raise FileNotFoundError(
+            "models/best.pt was not found."
+        )
 
     vehicle_model = YOLO(
         "yolo11n.pt"
@@ -919,6 +1187,7 @@ section_header(
     "VIDEO ANALYSIS PIPELINE"
 )
 
+
 st.markdown(
     """
     <div class="upload-panel">
@@ -929,8 +1198,16 @@ st.markdown(
 
         <div class="upload-description">
             Upload MP4, AVI, MOV or MKV footage for
-            AI-powered traffic analysis.
-            Maximum file size: 200 MB.
+            AI-powered vehicle detection, tracking
+            and license plate recognition.
+        </div>
+
+        <div class="upload-meta">
+            MAX 200 MB &nbsp;•&nbsp;
+            MP4 &nbsp;•&nbsp;
+            AVI &nbsp;•&nbsp;
+            MOV &nbsp;•&nbsp;
+            MKV
         </div>
 
     </div>
@@ -967,13 +1244,7 @@ if uploaded is None:
 
             AWAITING VIDEO INPUT
 
-            <div style="
-                margin-top:8px;
-                font-family:IBM Plex Sans,sans-serif;
-                font-size:11px;
-                letter-spacing:0;
-                color:#53616D;
-            ">
+            <div class="empty-description">
                 Upload traffic footage to initialize
                 the AI detection pipeline
             </div>
@@ -990,8 +1261,9 @@ if uploaded is None:
 # FILE SIZE
 # =========================================================
 
-file_size_mb = uploaded.size / (
-    1024 * 1024
+file_size_mb = (
+    uploaded.size /
+    (1024 * 1024)
 )
 
 
@@ -1004,11 +1276,15 @@ if file_size_mb > 200:
     st.stop()
 
 
+# =========================================================
+# FILE READY
+# =========================================================
+
 st.markdown(
     f"""
-    <div class="status-bar">
+    <div class="file-ready">
 
-        <span class="status-active">
+        <span class="file-ready-status">
             ● FILE READY
         </span>
 
@@ -1049,21 +1325,43 @@ if not start:
 # SAVE VIDEO
 # =========================================================
 
-video_path = "uploaded_traffic.mp4"
+extension = os.path.splitext(
+    uploaded.name
+)[1].lower()
 
 
-with open(
-    video_path,
-    "wb"
-) as f:
+if extension not in [
+    ".mp4",
+    ".avi",
+    ".mov",
+    ".mkv"
+]:
 
-    f.write(
+    extension = ".mp4"
+
+
+video_file = tempfile.NamedTemporaryFile(
+    delete=False,
+    suffix=extension
+)
+
+
+video_path = video_file.name
+
+
+try:
+
+    video_file.write(
         uploaded.getbuffer()
     )
 
+finally:
+
+    video_file.close()
+
 
 # =========================================================
-# MODEL LOADING
+# MODEL INITIALIZATION
 # =========================================================
 
 section_header(
@@ -1071,19 +1369,66 @@ section_header(
     "INITIALIZATION"
 )
 
-with st.spinner(
-    "Loading YOLO11, plate detector and OCR engine..."
-):
 
-    (
-        vehicle_model,
-        plate_model,
-        reader
-    ) = load_models()
+try:
+
+    with st.spinner(
+        "Loading YOLO11, ByteTrack, plate detector and EasyOCR..."
+    ):
+
+        (
+            vehicle_model,
+            plate_model,
+            reader
+        ) = load_models()
+
+except Exception as e:
+
+    st.error(
+        f"AI model initialization failed: {e}"
+    )
+
+    try:
+        os.remove(video_path)
+    except Exception:
+        pass
+
+    st.stop()
 
 
-st.success(
-    "AI inference engine initialized successfully."
+st.markdown(
+    """
+    <div class="status-bar">
+
+        <span class="status-active">
+            ● ENGINE READY
+        </span>
+
+        <span>
+            YOLO11
+        </span>
+
+        <span>·</span>
+
+        <span>
+            BYTE TRACK
+        </span>
+
+        <span>·</span>
+
+        <span>
+            PLATE OCR
+        </span>
+
+        <span>·</span>
+
+        <span>
+            EASYOCR
+        </span>
+
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 
 
@@ -1102,8 +1447,17 @@ if not cap.isOpened():
         "Could not open the uploaded video."
     )
 
+    try:
+        os.remove(video_path)
+    except Exception:
+        pass
+
     st.stop()
 
+
+# =========================================================
+# VIDEO INFORMATION
+# =========================================================
 
 total_frames = int(
     cap.get(
@@ -1157,6 +1511,7 @@ section_header(
     "Live Feed",
     "REAL-TIME INFERENCE"
 )
+
 
 st.markdown(
     """
@@ -1220,700 +1575,737 @@ plate_display = st.empty()
 # VIDEO PROCESSING
 # =========================================================
 
-while True:
+try:
 
-    ret, frame = cap.read()
+    while True:
 
-
-    if not ret:
-
-        break
+        ret, frame = cap.read()
 
 
-    frame_number += 1
+        if not ret:
+
+            break
 
 
-    if frame_number % FRAME_SKIP != 0:
-
-        continue
+        frame_number += 1
 
 
-    processed_frames += 1
+        if frame_number % FRAME_SKIP != 0:
+
+            continue
 
 
-    # =====================================================
-    # VEHICLE TRACKING
-    # =====================================================
-
-    results = vehicle_model.track(
-        frame,
-        persist=True,
-        tracker="bytetrack.yaml",
-        conf=0.40,
-        iou=0.5,
-        verbose=False
-    )
+        processed_frames += 1
 
 
-    result = results[0]
+        # =====================================================
+        # VEHICLE TRACKING
+        # =====================================================
+
+        results = vehicle_model.track(
+
+            frame,
+
+            persist=True,
+
+            tracker="bytetrack.yaml",
+
+            conf=0.40,
+
+            iou=0.5,
+
+            verbose=False
+
+        )
 
 
-    current_ids = set()
-
-    cars = 0
-
-    motorcycles = 0
-
-    buses = 0
-
-    trucks = 0
+        result = results[0]
 
 
-    # =====================================================
-    # VEHICLE DETECTIONS
-    # =====================================================
+        current_ids = set()
 
-    if result.boxes is not None:
+        cars = 0
 
-        boxes = result.boxes
+        motorcycles = 0
 
+        buses = 0
 
-        if boxes.id is not None:
-
-            ids = (
-                boxes.id
-                .int()
-                .cpu()
-                .tolist()
-            )
+        trucks = 0
 
 
-            classes = (
-                boxes.cls
-                .int()
-                .cpu()
-                .tolist()
-            )
+        # =====================================================
+        # VEHICLE DETECTIONS
+        # =====================================================
+
+        if result.boxes is not None:
+
+            boxes = result.boxes
 
 
-            coordinates = (
-                boxes.xyxy
-                .int()
-                .cpu()
-                .tolist()
-            )
+            if boxes.id is not None:
 
-
-            for (
-                vehicle_id,
-                cls,
-                box
-            ) in zip(
-                ids,
-                classes,
-                coordinates
-            ):
-
-
-                current_ids.add(
-                    vehicle_id
+                ids = (
+                    boxes.id
+                    .int()
+                    .cpu()
+                    .tolist()
                 )
 
 
-                all_ids.add(
-                    vehicle_id
+                classes = (
+                    boxes.cls
+                    .int()
+                    .cpu()
+                    .tolist()
                 )
 
 
-                # =============================================
-                # VEHICLE TYPE
-                # =============================================
-
-                if cls == 2:
-
-                    vehicle_type = "Car"
-
-                    cars += 1
-
-
-                elif cls == 3:
-
-                    vehicle_type = "Motorcycle"
-
-                    motorcycles += 1
-
-
-                elif cls == 5:
-
-                    vehicle_type = "Bus"
-
-                    buses += 1
-
-
-                elif cls == 7:
-
-                    vehicle_type = "Truck"
-
-                    trucks += 1
-
-
-                else:
-
-                    continue
-
-
-                # =============================================
-                # BOX
-                # =============================================
-
-                x1, y1, x2, y2 = box
-
-
-                x1 = max(
-                    0,
-                    x1
-                )
-
-                y1 = max(
-                    0,
-                    y1
-                )
-
-                x2 = min(
-                    frame.shape[1],
-                    x2
-                )
-
-                y2 = min(
-                    frame.shape[0],
-                    y2
+                coordinates = (
+                    boxes.xyxy
+                    .int()
+                    .cpu()
+                    .tolist()
                 )
 
 
-                if (
-                    x2 <= x1
-                    or
-                    y2 <= y1
+                for (
+                    vehicle_id,
+                    cls,
+                    box
+                ) in zip(
+                    ids,
+                    classes,
+                    coordinates
                 ):
 
-                    continue
-
-
-                crop = frame[
-                    y1:y2,
-                    x1:x2
-                ]
-
-
-                # =============================================
-                # OCR
-                # =============================================
-
-                should_ocr = (
-
-                    vehicle_id
-                    not in last_ocr
-
-                    or
-
-                    frame_number
-                    -
-                    last_ocr[
+                    current_ids.add(
                         vehicle_id
+                    )
+
+                    all_ids.add(
+                        vehicle_id
+                    )
+
+
+                    # =========================================
+                    # VEHICLE TYPE
+                    # =========================================
+
+                    if cls == 2:
+
+                        vehicle_type = "Car"
+
+                        cars += 1
+
+
+                    elif cls == 3:
+
+                        vehicle_type = "Motorcycle"
+
+                        motorcycles += 1
+
+
+                    elif cls == 5:
+
+                        vehicle_type = "Bus"
+
+                        buses += 1
+
+
+                    elif cls == 7:
+
+                        vehicle_type = "Truck"
+
+                        trucks += 1
+
+
+                    else:
+
+                        continue
+
+
+                    # =========================================
+                    # BOUNDING BOX
+                    # =========================================
+
+                    x1, y1, x2, y2 = box
+
+
+                    x1 = max(
+                        0,
+                        x1
+                    )
+
+                    y1 = max(
+                        0,
+                        y1
+                    )
+
+                    x2 = min(
+                        frame.shape[1],
+                        x2
+                    )
+
+                    y2 = min(
+                        frame.shape[0],
+                        y2
+                    )
+
+
+                    if (
+                        x2 <= x1
+                        or
+                        y2 <= y1
+                    ):
+
+                        continue
+
+
+                    crop = frame[
+                        y1:y2,
+                        x1:x2
                     ]
-                    >= OCR_INTERVAL
-
-                )
 
 
-                if (
-                    should_ocr
-                    and
-                    crop.size > 0
-                ):
+                    # =========================================
+                    # OCR
+                    # =========================================
 
-                    last_ocr[
+                    should_ocr = (
+
                         vehicle_id
-                    ] = frame_number
+                        not in last_ocr
+
+                        or
+
+                        frame_number
+                        -
+                        last_ocr[
+                            vehicle_id
+                        ]
+                        >= OCR_INTERVAL
+
+                    )
 
 
-                    try:
+                    if (
+                        should_ocr
+                        and
+                        crop.size > 0
+                    ):
 
-                        plate_results = plate_model(
-                            crop,
-                            conf=0.50,
-                            verbose=False
-                        )
-
-
-                        for plate_result in plate_results:
-
-                            if (
-                                plate_result.boxes
-                                is None
-                            ):
-
-                                continue
+                        last_ocr[
+                            vehicle_id
+                        ] = frame_number
 
 
-                            plate_boxes = (
-                                plate_result
-                                .boxes
-                                .xyxy
-                                .int()
-                                .cpu()
-                                .tolist()
+                        try:
+
+                            plate_results = (
+                                plate_model(
+                                    crop,
+                                    conf=0.50,
+                                    verbose=False
+                                )
                             )
 
 
-                            for pbox in plate_boxes:
-
-                                px1, py1, px2, py2 = pbox
-
-
-                                px1 = max(
-                                    0,
-                                    px1
-                                )
-
-                                py1 = max(
-                                    0,
-                                    py1
-                                )
-
-                                px2 = min(
-                                    crop.shape[1],
-                                    px2
-                                )
-
-                                py2 = min(
-                                    crop.shape[0],
-                                    py2
-                                )
-
+                            for plate_result in plate_results:
 
                                 if (
-                                    px2 <= px1
-                                    or
-                                    py2 <= py1
+                                    plate_result.boxes
+                                    is None
                                 ):
 
                                     continue
 
 
-                                plate_crop = crop[
-                                    py1:py2,
-                                    px1:px2
-                                ]
+                                plate_boxes = (
+                                    plate_result
+                                    .boxes
+                                    .xyxy
+                                    .int()
+                                    .cpu()
+                                    .tolist()
+                                )
 
 
-                                if plate_crop.size == 0:
+                                for pbox in plate_boxes:
 
-                                    continue
+                                    px1, py1, px2, py2 = pbox
 
 
-                                try:
-
-                                    ocr_results = reader.readtext(
-                                        plate_crop,
-                                        detail=1
+                                    px1 = max(
+                                        0,
+                                        px1
                                     )
 
-                                except Exception:
+                                    py1 = max(
+                                        0,
+                                        py1
+                                    )
 
-                                    ocr_results = []
+                                    px2 = min(
+                                        crop.shape[1],
+                                        px2
+                                    )
+
+                                    py2 = min(
+                                        crop.shape[0],
+                                        py2
+                                    )
 
 
-                                best_text = ""
-
-                                best_conf = 0.0
-
-
-                                for item in ocr_results:
-
-                                    if len(item) < 3:
+                                    if (
+                                        px2 <= px1
+                                        or
+                                        py2 <= py1
+                                    ):
 
                                         continue
 
 
-                                    text = clean_text(
-                                        item[1]
-                                    )
+                                    plate_crop = crop[
+                                        py1:py2,
+                                        px1:px2
+                                    ]
 
 
-                                    confidence = float(
-                                        item[2]
-                                    )
+                                    if plate_crop.size == 0:
+
+                                        continue
 
 
-                                    if (
-                                        len(text) >= 3
-                                        and
-                                        confidence > best_conf
-                                    ):
+                                    try:
 
-                                        best_text = text
+                                        ocr_results = (
+                                            reader.readtext(
+                                                plate_crop,
+                                                detail=1
+                                            )
+                                        )
 
-                                        best_conf = confidence
+                                    except Exception:
 
-
-                                if best_text:
-
-                                    previous = plate_data.get(
-                                        vehicle_id
-                                    )
+                                        ocr_results = []
 
 
-                                    if (
-                                        previous is None
-                                        or
-                                        best_conf
-                                        >
-                                        previous[
-                                            "confidence"
-                                        ]
-                                    ):
+                                    best_text = ""
 
-                                        plate_data[
-                                            vehicle_id
-                                        ] = {
-
-                                            "text":
-                                                best_text,
-
-                                            "confidence":
-                                                best_conf
-
-                                        }
+                                    best_conf = 0.0
 
 
-                    except Exception:
+                                    for item in ocr_results:
 
-                        pass
+                                        if len(item) < 3:
 
-
-                # =============================================
-                # VEHICLE BOX
-                # =============================================
-
-                cv2.rectangle(
-                    frame,
-                    (x1, y1),
-                    (x2, y2),
-                    (195, 230, 0),
-                    2
-                )
+                                            continue
 
 
-                # =============================================
-                # VEHICLE LABEL
-                # =============================================
-
-                label = (
-                    f"{vehicle_type} "
-                    f"ID:{vehicle_id}"
-                )
+                                        text = clean_text(
+                                            item[1]
+                                        )
 
 
-                cv2.putText(
-                    frame,
-                    label,
-                    (
-                        x1,
-                        max(
-                            25,
-                            y1 - 8
-                        )
-                    ),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.55,
-                    (195, 230, 0),
-                    2
-                )
+                                        confidence = float(
+                                            item[2]
+                                        )
 
 
-                # =============================================
-                # PLATE LABEL
-                # =============================================
+                                        if (
+                                            len(text) >= 3
+                                            and
+                                            confidence > best_conf
+                                        ):
 
-                if vehicle_id in plate_data:
+                                            best_text = text
 
-                    plate_text = (
-                        plate_data[
-                            vehicle_id
-                        ][
-                            "text"
-                        ]
+                                            best_conf = confidence
+
+
+                                    if best_text:
+
+                                        previous = (
+                                            plate_data.get(
+                                                vehicle_id
+                                            )
+                                        )
+
+
+                                        if (
+                                            previous is None
+                                            or
+                                            best_conf
+                                            >
+                                            previous[
+                                                "confidence"
+                                            ]
+                                        ):
+
+                                            plate_data[
+                                                vehicle_id
+                                            ] = {
+
+                                                "text":
+                                                    best_text,
+
+                                                "confidence":
+                                                    best_conf
+
+                                            }
+
+
+                        except Exception:
+
+                            pass
+
+
+                    # =========================================
+                    # VEHICLE BOX
+                    # =========================================
+
+                    cv2.rectangle(
+
+                        frame,
+
+                        (x1, y1),
+
+                        (x2, y2),
+
+                        (195, 230, 0),
+
+                        2
+
+                    )
+
+
+                    # =========================================
+                    # VEHICLE LABEL
+                    # =========================================
+
+                    label = (
+                        f"{vehicle_type} "
+                        f"ID:{vehicle_id}"
                     )
 
 
                     cv2.putText(
+
                         frame,
-                        f"Plate: {plate_text}",
+
+                        label,
+
                         (
                             x1,
-                            min(
-                                frame.shape[0] - 10,
-                                y2 + 22
+                            max(
+                                25,
+                                y1 - 8
                             )
                         ),
+
                         cv2.FONT_HERSHEY_SIMPLEX,
+
                         0.55,
-                        (32, 176, 255),
+
+                        (195, 230, 0),
+
                         2
+
                     )
 
 
-    # =====================================================
-    # TRACKING TEXT
-    # =====================================================
+                    # =========================================
+                    # PLATE LABEL
+                    # =========================================
 
-    cv2.putText(
-        frame,
-        f"TRACKED: {len(current_ids)}",
-        (20, 35),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        0.75,
-        (195, 230, 0),
-        2
-    )
+                    if vehicle_id in plate_data:
 
-
-    # =====================================================
-    # DISPLAY FRAME
-    # =====================================================
-
-    rgb = cv2.cvtColor(
-        frame,
-        cv2.COLOR_BGR2RGB
-    )
+                        plate_text = (
+                            plate_data[
+                                vehicle_id
+                            ][
+                                "text"
+                            ]
+                        )
 
 
-    video_display.image(
-        rgb,
-        channels="RGB",
-        use_container_width=True
-    )
+                        cv2.putText(
+
+                            frame,
+
+                            f"Plate: {plate_text}",
+
+                            (
+                                x1,
+
+                                min(
+                                    frame.shape[0] - 10,
+
+                                    y2 + 22
+                                )
+                            ),
+
+                            cv2.FONT_HERSHEY_SIMPLEX,
+
+                            0.55,
+
+                            (32, 176, 255),
+
+                            2
+
+                        )
 
 
-    # =====================================================
-    # LIVE KPI CARDS
-    # =====================================================
+        # =====================================================
+        # TRACKING TEXT
+        # =====================================================
 
-    tracked_box.markdown(
-        kpi_html(
-            "Currently Tracked",
-            len(current_ids),
-            True,
-            "◉"
-        ),
-        unsafe_allow_html=True
-    )
+        cv2.putText(
 
+            frame,
 
-    cars_box.markdown(
-        kpi_html(
-            "Cars",
-            cars,
-            False,
-            "🚗"
-        ),
-        unsafe_allow_html=True
-    )
+            f"TRACKED: {len(current_ids)}",
 
+            (20, 35),
 
-    bikes_box.markdown(
-        kpi_html(
-            "Motorcycles",
-            motorcycles,
-            False,
-            "🏍"
-        ),
-        unsafe_allow_html=True
-    )
+            cv2.FONT_HERSHEY_SIMPLEX,
 
+            0.75,
 
-    buses_box.markdown(
-        kpi_html(
-            "Buses",
-            buses,
-            False,
-            "🚌"
-        ),
-        unsafe_allow_html=True
-    )
+            (195, 230, 0),
 
+            2
 
-    trucks_box.markdown(
-        kpi_html(
-            "Trucks",
-            trucks,
-            False,
-            "🚚"
-        ),
-        unsafe_allow_html=True
-    )
-
-
-    # =====================================================
-    # PLATE TABLE
-    # =====================================================
-
-    if plate_data:
-
-        rows = []
-
-
-        for (
-            vehicle_id,
-            data
-        ) in plate_data.items():
-
-            rows.append({
-
-                "Vehicle ID":
-                    f"#{vehicle_id}",
-
-                "License Plate":
-                    data["text"],
-
-                "Confidence":
-                    round(
-                        data["confidence"],
-                        2
-                    )
-
-            })
-
-
-        plate_df = pd.DataFrame(
-            rows
         )
 
 
-        plate_df["_sort"] = (
-            plate_df[
-                "Vehicle ID"
-            ]
-            .str.replace(
-                "#",
-                "",
-                regex=False
+        # =====================================================
+        # DISPLAY FRAME
+        # =====================================================
+
+        rgb = cv2.cvtColor(
+            frame,
+            cv2.COLOR_BGR2RGB
+        )
+
+
+        video_display.image(
+
+            rgb,
+
+            channels="RGB",
+
+            use_container_width=True
+
+        )
+
+
+        # =====================================================
+        # KPI CARDS
+        # =====================================================
+
+        tracked_box.markdown(
+
+            kpi_html(
+                "Currently Tracked",
+                len(current_ids),
+                True,
+                "◉"
+            ),
+
+            unsafe_allow_html=True
+
+        )
+
+
+        cars_box.markdown(
+
+            kpi_html(
+                "Cars",
+                cars,
+                False,
+                "🚗"
+            ),
+
+            unsafe_allow_html=True
+
+        )
+
+
+        bikes_box.markdown(
+
+            kpi_html(
+                "Motorcycles",
+                motorcycles,
+                False,
+                "🏍"
+            ),
+
+            unsafe_allow_html=True
+
+        )
+
+
+        buses_box.markdown(
+
+            kpi_html(
+                "Buses",
+                buses,
+                False,
+                "🚌"
+            ),
+
+            unsafe_allow_html=True
+
+        )
+
+
+        trucks_box.markdown(
+
+            kpi_html(
+                "Trucks",
+                trucks,
+                False,
+                "🚚"
+            ),
+
+            unsafe_allow_html=True
+
+        )
+
+
+        # =====================================================
+        # PLATE TABLE
+        # =====================================================
+
+        if plate_data:
+
+            plate_df = (
+                create_plate_dataframe(
+                    plate_data
+                )
             )
-            .astype(int)
-        )
 
 
-        plate_df = (
-            plate_df
-            .sort_values("_sort")
-            .drop(columns="_sort")
-        )
+            plate_display.dataframe(
 
+                plate_df,
 
-        plate_display.dataframe(
-            plate_df,
-            use_container_width=True,
-            hide_index=True,
+                use_container_width=True,
 
-            column_config={
+                hide_index=True,
 
-                "Vehicle ID":
-                    st.column_config.TextColumn(
-                        "Vehicle ID"
-                    ),
+                column_config={
 
-                "License Plate":
-                    st.column_config.TextColumn(
-                        "License Plate"
-                    ),
+                    "Vehicle ID":
+                        st.column_config.TextColumn(
+                            "Vehicle ID"
+                        ),
 
-                "Confidence":
-                    st.column_config.NumberColumn(
-                        "Confidence",
-                        format="%.2f"
-                    )
+                    "License Plate":
+                        st.column_config.TextColumn(
+                            "License Plate"
+                        ),
 
-            }
-        )
+                    "Confidence":
+                        st.column_config.NumberColumn(
+                            "Confidence",
+                            format="%.2f"
+                        )
 
+                }
 
-    else:
-
-        plate_display.info(
-            "No license plates recognized yet."
-        )
-
-
-    # =====================================================
-    # PROGRESS
-    # =====================================================
-
-    if total_frames > 0:
-
-        progress.progress(
-            min(
-                frame_number /
-                total_frames,
-                1.0
             )
+
+        else:
+
+            plate_display.info(
+                "No license plates recognized yet."
+            )
+
+
+        # =====================================================
+        # PROGRESS
+        # =====================================================
+
+        if total_frames > 0:
+
+            progress.progress(
+
+                min(
+                    frame_number /
+                    total_frames,
+
+                    1.0
+                )
+
+            )
+
+
+        # =====================================================
+        # STATUS
+        # =====================================================
+
+        status.markdown(
+
+            f"""
+            <div class="status-bar">
+
+                <span class="status-active">
+                    ● PROCESSING
+                </span>
+
+                <span>
+                    FRAME {frame_number}/{total_frames}
+                </span>
+
+                <span>·</span>
+
+                <span>
+                    TRACK IDS: {len(all_ids)}
+                </span>
+
+                <span>·</span>
+
+                <span>
+                    PLATES: {len(plate_data)}
+                </span>
+
+                <span>·</span>
+
+                <span>
+                    FPS: {fps:.0f}
+                </span>
+
+            </div>
+            """,
+
+            unsafe_allow_html=True
+
         )
 
 
-    # =====================================================
-    # STATUS
-    # =====================================================
+finally:
 
-    elapsed_frames = processed_frames
+    cap.release()
 
-    status.markdown(
-        f"""
-        <div class="status-bar">
+    try:
 
-            <span class="status-active">
-                ● PROCESSING
-            </span>
+        os.remove(
+            video_path
+        )
 
-            <span>
-                FRAME {frame_number}/{total_frames}
-            </span>
+    except Exception:
 
-            <span>·</span>
-
-            <span>
-                TRACK IDS: {len(all_ids)}
-            </span>
-
-            <span>·</span>
-
-            <span>
-                PLATES: {len(plate_data)}
-            </span>
-
-            <span>·</span>
-
-            <span>
-                FPS: {fps:.0f}
-            </span>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+        pass
 
 
 # =========================================================
-# RELEASE VIDEO
+# COMPLETION
 # =========================================================
-
-cap.release()
 
 progress.progress(1.0)
 
-
-# =========================================================
-# COMPLETED
-# =========================================================
 
 st.success(
     "🎉 AI Traffic Analysis Completed!"
@@ -1934,40 +2326,49 @@ a, b, c = st.columns(3)
 
 
 a.markdown(
+
     kpi_html(
         "Track IDs Observed",
         len(all_ids),
         True,
         "◉"
     ),
+
     unsafe_allow_html=True
+
 )
 
 
 b.markdown(
+
     kpi_html(
         "License Plates Recognized",
         len(plate_data),
         False,
         "▣"
     ),
+
     unsafe_allow_html=True
+
 )
 
 
 c.markdown(
+
     kpi_html(
         "Frames Processed",
         processed_frames,
         False,
         "▤"
     ),
+
     unsafe_allow_html=True
+
 )
 
 
 # =========================================================
-# FINAL LICENSE PLATE RESULTS
+# FINAL PLATE RESULTS
 # =========================================================
 
 section_header(
@@ -1978,59 +2379,19 @@ section_header(
 
 if plate_data:
 
-    final_rows = []
-
-
-    for (
-        vehicle_id,
-        data
-    ) in plate_data.items():
-
-        final_rows.append({
-
-            "Vehicle ID":
-                f"#{vehicle_id}",
-
-            "License Plate":
-                data["text"],
-
-            "Confidence":
-                round(
-                    data["confidence"],
-                    2
-                )
-
-        })
-
-
-    final_df = pd.DataFrame(
-        final_rows
-    )
-
-
-    final_df["_sort"] = (
-        final_df[
-            "Vehicle ID"
-        ]
-        .str.replace(
-            "#",
-            "",
-            regex=False
-        )
-        .astype(int)
-    )
-
-
     final_df = (
-        final_df
-        .sort_values("_sort")
-        .drop(columns="_sort")
+        create_plate_dataframe(
+            plate_data
+        )
     )
 
 
     st.dataframe(
+
         final_df,
+
         use_container_width=True,
+
         hide_index=True,
 
         column_config={
@@ -2052,8 +2413,8 @@ if plate_data:
                 )
 
         }
-    )
 
+    )
 
 else:
 
@@ -2068,16 +2429,7 @@ else:
 
 st.markdown(
     """
-    <div style="
-        margin-top:45px;
-        padding-top:18px;
-        border-top:1px solid #202B35;
-        text-align:center;
-        font-family:JetBrains Mono,monospace;
-        font-size:9px;
-        letter-spacing:1px;
-        color:#46535E;
-    ">
+    <div class="app-footer">
 
         AI TRAFFIC INTELLIGENCE
         &nbsp;·&nbsp;
