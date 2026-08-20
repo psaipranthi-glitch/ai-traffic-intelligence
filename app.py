@@ -32,318 +32,629 @@ def inject_theme():
             'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap'
         );
 
-
-        /* =================================================
-           ROOT
-           ================================================= */
-
         :root {
-            --bg: #0A0E13;
-            --panel: #10161D;
-            --border: #26323D;
-            --text: #E7EDF3;
-            --muted: #8B9AA8;
-            --dim: #586774;
+            --bg: #070B0F;
+            --panel: #0D1319;
+            --panel-2: #111920;
+            --border: #202B35;
+            --border-light: #2B3945;
+            --text: #E8EEF3;
+            --muted: #7F8D99;
             --cyan: #00E6C3;
+            --blue: #4DA3FF;
+            --orange: #FFB454;
         }
-
-
-        /* =================================================
-           GLOBAL
-           ================================================= */
 
         html,
         body,
         [class*="css"] {
-            font-family:
-                'IBM Plex Sans',
-                sans-serif;
+            font-family: 'IBM Plex Sans', sans-serif;
         }
-
 
         .stApp {
-
             background:
                 radial-gradient(
-                    circle at 15% 0%,
-                    rgba(0,230,195,0.055),
-                    transparent 35%
+                    circle at 5% 0%,
+                    rgba(0,230,195,0.07),
+                    transparent 28%
                 ),
-                #0A0E13;
+                radial-gradient(
+                    circle at 95% 10%,
+                    rgba(77,163,255,0.045),
+                    transparent 25%
+                ),
+                #070B0F;
+            color: var(--text);
         }
-
 
         header[data-testid="stHeader"] {
             background: transparent;
         }
 
+        footer {
+            visibility: hidden;
+        }
+
+        #MainMenu {
+            visibility: hidden;
+        }
 
         .block-container {
-
-            max-width: 1400px;
-
-            padding-top: 3.2rem;
-
-            padding-bottom: 3rem;
+            max-width: 1450px;
+            padding-top: 2rem;
+            padding-bottom: 4rem;
         }
 
 
-        /* =================================================
-           MAIN HEADER
-           ================================================= */
+        /* =====================================================
+           HERO HEADER
+           ===================================================== */
 
-        .main-header {
+        .hero {
+            position: relative;
+            padding: 25px 28px;
+            margin-bottom: 22px;
 
             background:
                 linear-gradient(
                     135deg,
-                    rgba(16,22,29,0.98),
-                    rgba(10,14,19,0.98)
+                    rgba(17,25,32,0.98),
+                    rgba(10,15,20,0.98)
                 );
 
-            border:
-                1px solid
-                #26323D;
-
-            border-radius: 10px;
-
-            padding: 22px 26px;
-
-            margin-bottom: 28px;
-
-            width: 100%;
-
-            box-sizing: border-box;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
 
             box-shadow:
-                0 8px 30px
-                rgba(0,0,0,0.18);
+                0 20px 60px rgba(0,0,0,0.25);
         }
 
+        .hero::before {
+            content: "";
 
-        .header-title {
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 2px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    var(--cyan),
+                    transparent
+                );
+
+            opacity: 0.75;
+        }
+
+        .hero-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .hero-title {
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+
+            color: var(--text);
+        }
+
+        .hero-subtitle {
+            margin-top: 8px;
+
+            font-size: 13px;
+
+            color: var(--muted);
+
+            letter-spacing: 0.3px;
+        }
+
+        .hero-tech {
+            margin-top: 12px;
 
             display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
 
-            align-items: center;
+        .tech {
+            padding: 4px 9px;
 
-            gap: 12px;
+            border: 1px solid var(--border-light);
+            border-radius: 5px;
+
+            background:
+                rgba(255,255,255,0.02);
+
+            color: #9EABB6;
 
             font-family:
                 'JetBrains Mono',
                 monospace;
 
-            font-size: 23px;
-
-            font-weight: 700;
-
-            letter-spacing: 0.6px;
-
-            color: #E7EDF3;
+            font-size: 9px;
+            letter-spacing: 0.8px;
         }
-
-
-        .header-icon {
-
-            color: #00E6C3;
-
-            font-size: 25px;
-        }
-
-
-        .header-subtitle {
-
-            margin-top: 8px;
-
-            font-family:
-                'IBM Plex Sans',
-                sans-serif;
-
-            font-size: 13px;
-
-            color: #8B9AA8;
-
-            letter-spacing: 0.4px;
-        }
-
-
-        .header-status-row {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 14px;
-
-            margin-top: 16px;
-        }
-
 
         .system-status {
-
             display: inline-flex;
 
             align-items: center;
+            gap: 9px;
 
-            gap: 8px;
-
-            padding: 6px 13px;
-
-            border:
-                1px solid
-                rgba(0,230,195,0.35);
+            padding: 8px 13px;
 
             border-radius: 20px;
+
+            border: 1px solid
+                rgba(0,230,195,0.28);
 
             background:
                 rgba(0,230,195,0.06);
 
-            color: #00E6C3;
-
-            font-family:
-                'JetBrains Mono',
-                monospace;
-
-            font-size: 11px;
-
-            font-weight: 600;
-
-            letter-spacing: 1px;
-        }
-
-
-        .status-dot {
-
-            display: inline-block;
-
-            width: 8px;
-
-            height: 8px;
-
-            border-radius: 50%;
-
-            background: #00E6C3;
-
-            box-shadow:
-                0 0 8px
-                rgba(0,230,195,0.8);
-        }
-
-
-        .engine-status {
+            color: var(--cyan);
 
             font-family:
                 'JetBrains Mono',
                 monospace;
 
             font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
 
-            color: #586774;
+            white-space: nowrap;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--cyan);
+
+            box-shadow:
+                0 0 0 3px rgba(0,230,195,0.08),
+                0 0 12px rgba(0,230,195,0.8);
+        }
+
+
+        /* =====================================================
+           SECTION HEADER
+           ===================================================== */
+
+        .section-header {
+            display: flex;
+
+            align-items: center;
+            gap: 10px;
+
+            margin-top: 28px;
+            margin-bottom: 12px;
+        }
+
+        .section-line {
+            width: 3px;
+            height: 18px;
+
+            border-radius: 2px;
+
+            background: var(--cyan);
+
+            box-shadow:
+                0 0 10px rgba(0,230,195,0.35);
+        }
+
+        .section-title {
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            letter-spacing: 1.7px;
+
+            text-transform: uppercase;
+
+            color: #8D9AA6;
+        }
+
+        .section-meta {
+            margin-left: auto;
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 9px;
+
+            color: #53616D;
 
             letter-spacing: 0.8px;
         }
 
 
-        /* =================================================
-           SECTION LABEL
-           ================================================= */
+        /* =====================================================
+           METRIC CARDS
+           ===================================================== */
 
-        .section-label {
+        .metric-card {
+            min-height: 102px;
 
-            margin: 25px 0 12px 0;
+            padding: 17px 18px;
 
-            padding-left: 10px;
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(17,25,32,0.96),
+                    rgba(11,16,21,0.96)
+                );
 
-            border-left:
-                2px solid
-                #00E6C3;
+            border: 1px solid var(--border);
+
+            border-radius: 9px;
+
+            position: relative;
+
+            overflow: hidden;
+
+            transition:
+                border-color .2s ease,
+                transform .2s ease;
+        }
+
+        .metric-card:hover {
+            border-color:
+                rgba(0,230,195,0.35);
+
+            transform: translateY(-1px);
+        }
+
+        .metric-card::after {
+            content: "";
+
+            position: absolute;
+
+            right: -25px;
+            bottom: -30px;
+
+            width: 90px;
+            height: 90px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(0,230,195,0.035);
+        }
+
+        .metric-label {
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 9px;
+            font-weight: 500;
+
+            letter-spacing: 1.2px;
+
+            text-transform: uppercase;
+
+            color: #687782;
+        }
+
+        .metric-value {
+            margin-top: 10px;
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 28px;
+            line-height: 1;
+
+            font-weight: 600;
+
+            color: var(--text);
+        }
+
+        .metric-value.accent {
+            color: var(--cyan);
+
+            text-shadow:
+                0 0 18px rgba(0,230,195,0.15);
+        }
+
+        .metric-icon {
+            float: right;
+
+            font-size: 16px;
+
+            opacity: 0.55;
+        }
+
+
+        /* =====================================================
+           UPLOAD PANEL
+           ===================================================== */
+
+        .upload-panel {
+            padding: 18px;
+
+            background:
+                rgba(13,19,25,0.85);
+
+            border: 1px solid var(--border);
+
+            border-radius: 9px;
+        }
+
+        .upload-title {
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            letter-spacing: 1px;
+
+            color: var(--text);
+        }
+
+        .upload-description {
+            margin-top: 5px;
+
+            font-size: 11px;
+
+            color: var(--muted);
+        }
+
+        [data-testid="stFileUploader"] {
+            margin-top: 12px;
+
+            background:
+                rgba(255,255,255,0.015);
+
+            border: 1px dashed #33414D;
+
+            border-radius: 8px;
+
+            padding: 14px;
+        }
+
+        [data-testid="stFileUploader"]:hover {
+            border-color:
+                rgba(0,230,195,0.45);
+        }
+
+        [data-testid="stFileUploaderDropzone"] {
+            background: transparent;
+        }
+
+
+        /* =====================================================
+           BUTTON
+           ===================================================== */
+
+        .stButton > button {
+            width: 100%;
+
+            min-height: 44px;
+
+            margin-top: 10px;
+
+            border:
+                1px solid rgba(0,230,195,0.55);
+
+            border-radius: 7px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(0,230,195,0.13),
+                    rgba(0,230,195,0.045)
+                );
+
+            color: var(--cyan);
 
             font-family:
                 'JetBrains Mono',
                 monospace;
 
             font-size: 11px;
-
             font-weight: 600;
 
-            letter-spacing: 1.8px;
+            letter-spacing: 0.7px;
 
-            text-transform: uppercase;
+            transition: all .2s ease;
+        }
 
-            color: #8B9AA8;
+        .stButton > button:hover {
+            border-color: var(--cyan);
+
+            background:
+                rgba(0,230,195,0.14);
+
+            box-shadow:
+                0 0 20px rgba(0,230,195,0.08);
+
+            color: var(--cyan);
         }
 
 
-        /* =================================================
-           FILE UPLOADER
-           ================================================= */
+        /* =====================================================
+           LIVE FEED
+           ===================================================== */
 
-        [data-testid="stFileUploader"] {
+        .feed-container {
+            position: relative;
 
-            background:
-                rgba(16,22,29,0.90);
+            padding: 7px;
 
-            border:
-                1px solid
-                #26323D;
+            background: #090E13;
 
-            border-radius: 8px;
+            border: 1px solid var(--border);
 
-            padding: 12px;
+            border-radius: 10px;
 
-            margin-top: 0;
-
-            transition:
-                border-color 0.2s ease,
-                background 0.2s ease;
+            box-shadow:
+                inset 0 0 30px rgba(0,0,0,0.35);
         }
 
+        .live-badge {
+            display: inline-flex;
 
-        [data-testid="stFileUploader"]:hover {
+            align-items: center;
+            gap: 7px;
 
-            border-color:
-                rgba(0,230,195,0.45);
+            padding: 5px 9px;
+
+            margin-bottom: 8px;
+
+            border-radius: 4px;
 
             background:
-                rgba(16,22,29,0.98);
+                rgba(7,11,15,0.85);
+
+            border: 1px solid
+                rgba(255,70,70,0.3);
+
+            color: #FF7777;
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 9px;
+            font-weight: 600;
+
+            letter-spacing: 1px;
         }
 
+        .live-dot {
+            width: 6px;
+            height: 6px;
 
-        [data-testid="stFileUploaderDropzone"] {
+            border-radius: 50%;
 
-            background:
-                rgba(10,14,19,0.55);
+            background: #FF5555;
+
+            box-shadow:
+                0 0 9px rgba(255,70,70,0.7);
+        }
+
+        [data-testid="stImage"] {
+            width: 100%;
+
+            padding: 0;
+
+            background: #080C10;
+
+            border: 0;
 
             border-radius: 6px;
+
+            overflow: hidden;
+        }
+
+        [data-testid="stImage"] img {
+            border-radius: 5px;
         }
 
 
-        /* =================================================
-           KPI
-           ================================================= */
+        /* =====================================================
+           PLATE TABLE
+           ===================================================== */
 
-        .kpi {
-
-            min-height: 88px;
-
-            padding: 15px 17px;
-
+        .plate-panel {
             background:
-                rgba(16,22,29,0.90);
+                rgba(13,19,25,0.9);
 
+            border: 1px solid var(--border);
+
+            border-radius: 9px;
+
+            padding: 5px;
+        }
+
+        [data-testid="stDataFrame"] {
             border:
-                1px solid
-                #26323D;
+                1px solid var(--border);
 
             border-radius: 7px;
 
-            box-sizing: border-box;
+            overflow: hidden;
         }
 
 
-        .kpi-label {
+        /* =====================================================
+           STATUS BAR
+           ===================================================== */
 
-            margin-bottom: 7px;
+        .status-bar {
+            display: flex;
+
+            align-items: center;
+            gap: 8px;
+
+            margin-top: 9px;
+
+            padding: 9px 12px;
+
+            background:
+                rgba(13,19,25,0.75);
+
+            border: 1px solid var(--border);
+
+            border-radius: 6px;
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 9px;
+
+            color: #697883;
+
+            letter-spacing: 0.6px;
+        }
+
+        .status-active {
+            color: var(--cyan);
+        }
+
+
+        /* =====================================================
+           EMPTY STATE
+           ===================================================== */
+
+        .empty-state {
+            padding: 38px 20px;
+
+            text-align: center;
+
+            background:
+                rgba(13,19,25,0.55);
+
+            border:
+                1px dashed #293640;
+
+            border-radius: 9px;
+
+            color: #667581;
 
             font-family:
                 'JetBrains Mono',
@@ -351,159 +662,60 @@ def inject_theme():
 
             font-size: 10px;
 
-            font-weight: 500;
-
-            letter-spacing: 1.3px;
-
-            text-transform: uppercase;
-
-            color: #8B9AA8;
+            letter-spacing: 1px;
         }
 
-
-        .kpi-value {
-
-            font-family:
-                'JetBrains Mono',
-                monospace;
-
+        .empty-icon {
             font-size: 27px;
 
-            font-weight: 600;
+            margin-bottom: 10px;
 
-            color: #E7EDF3;
+            opacity: 0.55;
         }
 
 
-        .kpi-value.accent {
+        /* =====================================================
+           ALERTS
+           ===================================================== */
 
-            color: #00E6C3;
+        .stAlert {
+            border-radius: 7px !important;
+            border: 1px solid var(--border) !important;
         }
 
 
-        /* =================================================
-           VIDEO
-           ================================================= */
+        /* =====================================================
+           PROGRESS
+           ===================================================== */
 
-        [data-testid="stImage"] {
+        [data-testid="stProgress"] {
+            margin-top: 10px;
+        }
 
-            width: 100%;
-
-            padding: 7px;
-
-            background: #10161D;
-
-            border:
-                1px solid
-                #26323D;
-
-            border-radius: 8px;
+        [data-testid="stProgressBar"] {
+            background: #151D24;
         }
 
 
-        /* =================================================
-           BUTTON
-           ================================================= */
+        /* =====================================================
+           MOBILE
+           ===================================================== */
 
-        .stButton > button {
+        @media (max-width: 800px) {
 
-            width: 100%;
+            .block-container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
 
-            margin-top: 8px;
+            .hero-grid {
+                flex-direction: column;
+            }
 
-            padding: 10px 16px;
+            .system-status {
+                align-self: flex-start;
+            }
 
-            border:
-                1px solid
-                #00E6C3;
-
-            border-radius: 7px;
-
-            background:
-                rgba(0,230,195,0.07);
-
-            color: #00E6C3;
-
-            font-family:
-                'JetBrains Mono',
-                monospace;
-
-            font-weight: 600;
-
-            letter-spacing: 0.5px;
-        }
-
-
-        .stButton > button:hover {
-
-            background:
-                rgba(0,230,195,0.16);
-
-            border-color:
-                #00E6C3;
-
-            color:
-                #00E6C3;
-        }
-
-
-        /* =================================================
-           DATAFRAME
-           ================================================= */
-
-        [data-testid="stDataFrame"] {
-
-            border:
-                1px solid
-                #26323D;
-
-            border-radius: 7px;
-
-            overflow: hidden;
-
-            margin-top: 8px;
-        }
-
-
-        /* =================================================
-           STATUS
-           ================================================= */
-
-        .status-line {
-
-            margin-top: 7px;
-
-            font-family:
-                'JetBrains Mono',
-                monospace;
-
-            font-size: 11px;
-
-            letter-spacing: 0.3px;
-
-            color: #8B9AA8;
-        }
-
-
-        /* =================================================
-           STREAMLIT ALERTS
-           ================================================= */
-
-        [data-testid="stAlert"] {
-
-            border-radius: 7px;
-        }
-
-
-        /* =================================================
-           SPINNER
-           ================================================= */
-
-        [data-testid="stSpinner"] {
-
-            font-family:
-                'JetBrains Mono',
-                monospace;
         }
 
         </style>
@@ -520,41 +732,48 @@ def render_header():
 
     st.markdown(
         """
-        <div class="main-header">
+        <div class="hero">
 
-            <div class="header-title">
+            <div class="hero-grid">
 
-                <span class="header-icon">
-                    🚦
-                </span>
+                <div>
 
-                AI TRAFFIC INTELLIGENCE
+                    <div class="hero-title">
+                        🚦 AI TRAFFIC INTELLIGENCE
+                    </div>
 
-            </div>
+                    <div class="hero-subtitle">
+                        Real-time vehicle detection, tracking
+                        and license plate recognition
+                    </div>
 
+                    <div class="hero-tech">
 
-            <div class="header-subtitle">
+                        <span class="tech">
+                            YOLO11
+                        </span>
 
-                Real-time traffic monitoring powered by
-                YOLO11 · ByteTrack · License Plate OCR
+                        <span class="tech">
+                            BYTE TRACK
+                        </span>
 
-            </div>
+                        <span class="tech">
+                            PLATE DETECTION
+                        </span>
 
+                        <span class="tech">
+                            EASYOCR
+                        </span>
 
-            <div class="header-status-row">
+                    </div>
+
+                </div>
 
                 <div class="system-status">
 
                     <span class="status-dot"></span>
 
                     SYSTEM ONLINE
-
-                </div>
-
-
-                <div class="engine-status">
-
-                    MULTIMODAL VISION ENGINE
 
                 </div>
 
@@ -567,22 +786,65 @@ def render_header():
 
 
 # =========================================================
-# KPI HTML
+# SECTION HEADER
 # =========================================================
 
-def kpi_html(label, value, accent=False):
+def section_header(title, meta=""):
+
+    meta_html = ""
+
+    if meta:
+
+        meta_html = f"""
+            <div class="section-meta">
+                {meta}
+            </div>
+        """
+
+    st.markdown(
+        f"""
+        <div class="section-header">
+
+            <div class="section-line"></div>
+
+            <div class="section-title">
+                {title}
+            </div>
+
+            {meta_html}
+
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+# =========================================================
+# KPI
+# =========================================================
+
+def kpi_html(
+    label,
+    value,
+    accent=False,
+    icon=""
+):
 
     value_class = (
-        "kpi-value accent"
+        "metric-value accent"
         if accent
         else
-        "kpi-value"
+        "metric-value"
     )
 
     return f"""
-    <div class="kpi">
+    <div class="metric-card">
 
-        <div class="kpi-label">
+        <span class="metric-icon">
+            {icon}
+        </span>
+
+        <div class="metric-label">
             {label}
         </div>
 
@@ -652,10 +914,25 @@ def clean_text(text):
 # INPUT FEED
 # =========================================================
 
+section_header(
+    "Input Feed",
+    "VIDEO ANALYSIS PIPELINE"
+)
+
 st.markdown(
     """
-    <div class="section-label">
-        Input Feed
+    <div class="upload-panel">
+
+        <div class="upload-title">
+            TRAFFIC VIDEO SOURCE
+        </div>
+
+        <div class="upload-description">
+            Upload MP4, AVI, MOV or MKV footage for
+            AI-powered traffic analysis.
+            Maximum file size: 200 MB.
+        </div>
+
     </div>
     """,
     unsafe_allow_html=True
@@ -663,7 +940,7 @@ st.markdown(
 
 
 uploaded = st.file_uploader(
-    "Upload a traffic video",
+    "Upload Traffic Video",
     type=[
         "mp4",
         "avi",
@@ -679,6 +956,32 @@ uploaded = st.file_uploader(
 # =========================================================
 
 if uploaded is None:
+
+    st.markdown(
+        """
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                🎥
+            </div>
+
+            AWAITING VIDEO INPUT
+
+            <div style="
+                margin-top:8px;
+                font-family:IBM Plex Sans,sans-serif;
+                font-size:11px;
+                letter-spacing:0;
+                color:#53616D;
+            ">
+                Upload traffic footage to initialize
+                the AI detection pipeline
+            </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     st.stop()
 
@@ -701,8 +1004,29 @@ if file_size_mb > 200:
     st.stop()
 
 
-st.success(
-    f"Loaded: {uploaded.name} · {file_size_mb:.1f} MB"
+st.markdown(
+    f"""
+    <div class="status-bar">
+
+        <span class="status-active">
+            ● FILE READY
+        </span>
+
+        <span>
+            {uploaded.name}
+        </span>
+
+        <span>
+            ·
+        </span>
+
+        <span>
+            {file_size_mb:.1f} MB
+        </span>
+
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 
 
@@ -711,7 +1035,7 @@ st.success(
 # =========================================================
 
 start = st.button(
-    "🚀 START AI TRAFFIC ANALYSIS",
+    "🚀  START AI TRAFFIC ANALYSIS",
     type="primary"
 )
 
@@ -739,11 +1063,16 @@ with open(
 
 
 # =========================================================
-# LOAD MODELS
+# MODEL LOADING
 # =========================================================
 
+section_header(
+    "AI Engine",
+    "INITIALIZATION"
+)
+
 with st.spinner(
-    "Loading AI models..."
+    "Loading YOLO11, plate detector and OCR engine..."
 ):
 
     (
@@ -751,6 +1080,11 @@ with st.spinner(
         plate_model,
         reader
     ) = load_models()
+
+
+st.success(
+    "AI inference engine initialized successfully."
+)
 
 
 # =========================================================
@@ -778,6 +1112,23 @@ total_frames = int(
 )
 
 
+fps = cap.get(
+    cv2.CAP_PROP_FPS
+)
+
+
+if fps <= 0:
+
+    fps = 30
+
+
+duration = (
+    total_frames / fps
+    if total_frames > 0
+    else 0
+)
+
+
 # =========================================================
 # PROCESSING VARIABLES
 # =========================================================
@@ -792,6 +1143,7 @@ plate_data = {}
 
 last_ocr = {}
 
+
 FRAME_SKIP = 3
 
 OCR_INTERVAL = 45
@@ -801,8 +1153,21 @@ OCR_INTERVAL = 45
 # LIVE FEED
 # =========================================================
 
+section_header(
+    "Live Feed",
+    "REAL-TIME INFERENCE"
+)
+
 st.markdown(
-    '<div class="section-label">Live Feed</div>',
+    """
+    <div class="live-badge">
+
+        <span class="live-dot"></span>
+
+        LIVE INFERENCE
+
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
@@ -818,9 +1183,9 @@ status = st.empty()
 # LIVE STATISTICS
 # =========================================================
 
-st.markdown(
-    '<div class="section-label">Live Traffic Statistics</div>',
-    unsafe_allow_html=True
+section_header(
+    "Live Traffic Statistics",
+    "CURRENT FRAME"
 )
 
 
@@ -842,9 +1207,9 @@ trucks_box = c5.empty()
 # LICENSE PLATES
 # =========================================================
 
-st.markdown(
-    '<div class="section-label">License Plates</div>',
-    unsafe_allow_html=True
+section_header(
+    "License Plates",
+    "OCR DETECTIONS"
 )
 
 
@@ -949,18 +1314,20 @@ while True:
                 coordinates
             ):
 
+
                 current_ids.add(
                     vehicle_id
                 )
+
 
                 all_ids.add(
                     vehicle_id
                 )
 
 
-                # =================================================
+                # =============================================
                 # VEHICLE TYPE
-                # =================================================
+                # =============================================
 
                 if cls == 2:
 
@@ -995,9 +1362,9 @@ while True:
                     continue
 
 
-                # =================================================
+                # =============================================
                 # BOX
-                # =================================================
+                # =============================================
 
                 x1, y1, x2, y2 = box
 
@@ -1038,9 +1405,9 @@ while True:
                 ]
 
 
-                # =================================================
+                # =============================================
                 # OCR
-                # =================================================
+                # =============================================
 
                 should_ocr = (
 
@@ -1055,6 +1422,7 @@ while True:
                         vehicle_id
                     ]
                     >= OCR_INTERVAL
+
                 )
 
 
@@ -1172,6 +1540,7 @@ while True:
                                         item[1]
                                     )
 
+
                                     confidence = float(
                                         item[2]
                                     )
@@ -1217,14 +1586,15 @@ while True:
 
                                         }
 
+
                     except Exception:
 
                         pass
 
 
-                # =================================================
+                # =============================================
                 # VEHICLE BOX
-                # =================================================
+                # =============================================
 
                 cv2.rectangle(
                     frame,
@@ -1235,9 +1605,9 @@ while True:
                 )
 
 
-                # =================================================
+                # =============================================
                 # VEHICLE LABEL
-                # =================================================
+                # =============================================
 
                 label = (
                     f"{vehicle_type} "
@@ -1262,9 +1632,9 @@ while True:
                 )
 
 
-                # =================================================
+                # =============================================
                 # PLATE LABEL
-                # =================================================
+                # =============================================
 
                 if vehicle_id in plate_data:
 
@@ -1300,7 +1670,7 @@ while True:
 
     cv2.putText(
         frame,
-        f"Currently Tracked: {len(current_ids)}",
+        f"TRACKED: {len(current_ids)}",
         (20, 35),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.75,
@@ -1327,14 +1697,15 @@ while True:
 
 
     # =====================================================
-    # KPI
+    # LIVE KPI CARDS
     # =====================================================
 
     tracked_box.markdown(
         kpi_html(
             "Currently Tracked",
             len(current_ids),
-            True
+            True,
+            "◉"
         ),
         unsafe_allow_html=True
     )
@@ -1343,7 +1714,9 @@ while True:
     cars_box.markdown(
         kpi_html(
             "Cars",
-            cars
+            cars,
+            False,
+            "🚗"
         ),
         unsafe_allow_html=True
     )
@@ -1352,7 +1725,9 @@ while True:
     bikes_box.markdown(
         kpi_html(
             "Motorcycles",
-            motorcycles
+            motorcycles,
+            False,
+            "🏍"
         ),
         unsafe_allow_html=True
     )
@@ -1361,7 +1736,9 @@ while True:
     buses_box.markdown(
         kpi_html(
             "Buses",
-            buses
+            buses,
+            False,
+            "🚌"
         ),
         unsafe_allow_html=True
     )
@@ -1370,7 +1747,9 @@ while True:
     trucks_box.markdown(
         kpi_html(
             "Trucks",
-            trucks
+            trucks,
+            False,
+            "🚚"
         ),
         unsafe_allow_html=True
     )
@@ -1436,6 +1815,7 @@ while True:
             plate_df,
             use_container_width=True,
             hide_index=True,
+
             column_config={
 
                 "Vehicle ID":
@@ -1453,6 +1833,7 @@ while True:
                         "Confidence",
                         format="%.2f"
                     )
+
             }
         )
 
@@ -1472,7 +1853,8 @@ while True:
 
         progress.progress(
             min(
-                frame_number / total_frames,
+                frame_number /
+                total_frames,
                 1.0
             )
         )
@@ -1482,19 +1864,37 @@ while True:
     # STATUS
     # =====================================================
 
+    elapsed_frames = processed_frames
+
     status.markdown(
         f"""
-        <div class="status-line">
+        <div class="status-bar">
 
-            FRAME {frame_number}/{total_frames}
+            <span class="status-active">
+                ● PROCESSING
+            </span>
 
-            ·
+            <span>
+                FRAME {frame_number}/{total_frames}
+            </span>
 
-            TRACK IDS OBSERVED: {len(all_ids)}
+            <span>·</span>
 
-            ·
+            <span>
+                TRACK IDS: {len(all_ids)}
+            </span>
 
-            PLATES RECOGNIZED: {len(plate_data)}
+            <span>·</span>
+
+            <span>
+                PLATES: {len(plate_data)}
+            </span>
+
+            <span>·</span>
+
+            <span>
+                FPS: {fps:.0f}
+            </span>
 
         </div>
         """,
@@ -1524,9 +1924,9 @@ st.success(
 # FINAL RESULTS
 # =========================================================
 
-st.markdown(
-    '<div class="section-label">Final Results</div>',
-    unsafe_allow_html=True
+section_header(
+    "Final Results",
+    "ANALYSIS SUMMARY"
 )
 
 
@@ -1537,7 +1937,8 @@ a.markdown(
     kpi_html(
         "Track IDs Observed",
         len(all_ids),
-        True
+        True,
+        "◉"
     ),
     unsafe_allow_html=True
 )
@@ -1546,7 +1947,9 @@ a.markdown(
 b.markdown(
     kpi_html(
         "License Plates Recognized",
-        len(plate_data)
+        len(plate_data),
+        False,
+        "▣"
     ),
     unsafe_allow_html=True
 )
@@ -1555,19 +1958,21 @@ b.markdown(
 c.markdown(
     kpi_html(
         "Frames Processed",
-        processed_frames
+        processed_frames,
+        False,
+        "▤"
     ),
     unsafe_allow_html=True
 )
 
 
 # =========================================================
-# FINAL PLATE RESULTS
+# FINAL LICENSE PLATE RESULTS
 # =========================================================
 
-st.markdown(
-    '<div class="section-label">Final License Plate Results</div>',
-    unsafe_allow_html=True
+section_header(
+    "Final License Plate Results",
+    "OCR SUMMARY"
 )
 
 
@@ -1627,6 +2032,7 @@ if plate_data:
         final_df,
         use_container_width=True,
         hide_index=True,
+
         column_config={
 
             "Vehicle ID":
@@ -1644,6 +2050,7 @@ if plate_data:
                     "Confidence",
                     format="%.2f"
                 )
+
         }
     )
 
@@ -1653,3 +2060,32 @@ else:
     st.info(
         "No license plates were recognized."
     )
+
+
+# =========================================================
+# FOOTER
+# =========================================================
+
+st.markdown(
+    """
+    <div style="
+        margin-top:45px;
+        padding-top:18px;
+        border-top:1px solid #202B35;
+        text-align:center;
+        font-family:JetBrains Mono,monospace;
+        font-size:9px;
+        letter-spacing:1px;
+        color:#46535E;
+    ">
+
+        AI TRAFFIC INTELLIGENCE
+        &nbsp;·&nbsp;
+        COMPUTER VISION ANALYTICS
+        &nbsp;·&nbsp;
+        YOLO11 + BYTETRACK + OCR
+
+    </div>
+    """,
+    unsafe_allow_html=True
+)
