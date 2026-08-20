@@ -1,915 +1,455 @@
-import streamlit as st
 import cv2
-import re
-import pandas as pd
+import time
+import os
 from ultralytics import YOLO
-import easyocr
 
+# ==========================================
+# CONFIGURATION
+# ==========================================
 
-# =========================================================
-# PAGE CONFIG
-# =========================================================
+VIDEO_PATH = "data/videos/traffic.mp4"
+MODEL_PATH = "yolo11n.pt"
 
-st.set_page_config(
-    page_title="AI Traffic Intelligence",
-    page_icon="🚦",
-    layout="wide"
-)
+CONFIDENCE = 0.4
 
+# Low counting line
+LINE_Y = 340
 
-# =========================================================
-# SIMPLE DARK UI
-# =========================================================
+# Vehicle classes from COCO
+VEHICLE_CLASSES = {
+    2: "Car",
+    3: "Motorcycle",
+    5: "Bus",
+    7: "Truck"
+}
 
-st.markdown(
-    """
-    <style>
-    .stApp {
-        background-color: #0A0E13;
-    }
+# ==========================================
+# CREATE OUTPUT FOLDER
+# ==========================================
 
-    .block-container {
-        padding-top: 3rem;
-        max-width: 1400px;
-    }
+os.makedirs("outputs", exist_ok=True)
 
-    h1 {
-        font-family: monospace !important;
-        letter-spacing: 1px;
-    }
+# ==========================================
+# LOAD YOLO MODEL
+# ==========================================
 
-    .section {
-        font-family: monospace;
-        color: #8B9AA8;
-        border-left: 3px solid #00E6C3;
-        padding-left: 10px;
-        margin-top: 25px;
-        margin-bottom: 12px;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-    }
+print("Loading YOLO model...")
 
-    .kpi {
-        background: #10161D;
-        border: 1px solid #26323D;
-        border-radius: 7px;
-        padding: 15px;
-    }
+model = YOLO(MODEL_PATH)
 
-    .kpi-label {
-        color: #8B9AA8;
-        font-family: monospace;
-        font-size: 11px;
-    }
+print("Model loaded successfully!")
 
-    .kpi-value {
-        color: #E7EDF3;
-        font-family: monospace;
-        font-size: 28px;
-        font-weight: 600;
-    }
+# ==========================================
+# OPEN VIDEO
+# ==========================================
 
-    .accent {
-        color: #00E6C3 !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-
-# =========================================================
-# HEADER
-# =========================================================
-
-st.title("🚦 AI TRAFFIC INTELLIGENCE")
-
-st.caption(
-    "YOLO11 · ByteTrack · License Plate OCR"
-)
-
-st.success("● SYSTEM READY")
-
-
-# =========================================================
-# MODEL LOADING
-# =========================================================
-
-@st.cache_resource(show_spinner=False)
-def load_models():
-
-    vehicle_model = YOLO("yolo11n.pt")
-
-    plate_model = YOLO("models/best.pt")
-
-    reader = easyocr.Reader(
-        ["en"],
-        gpu=False,
-        verbose=False
-    )
-
-    return vehicle_model, plate_model, reader
-
-
-# =========================================================
-# OCR CLEANING
-# =========================================================
-
-def clean_text(text):
-
-    text = str(text).upper()
-
-    return re.sub(
-        r"[^A-Z0-9]",
-        "",
-        text
-    )
-
-
-# =========================================================
-# KPI
-# =========================================================
-
-def show_kpi(container, label, value, accent=False):
-
-    color_class = "accent" if accent else ""
-
-    container.markdown(
-        f"""
-        <div class="kpi">
-            <div class="kpi-label">
-                {label}
-            </div>
-            <div class="kpi-value {color_class}">
-                {value}
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-
-# =========================================================
-# INPUT
-# =========================================================
-
-st.markdown(
-    '<div class="section">Input Feed</div>',
-    unsafe_allow_html=True
-)
-
-uploaded = st.file_uploader(
-    "Upload Traffic Video",
-    type=["mp4", "avi", "mov", "mkv"]
-)
-
-
-if uploaded is None:
-
-    st.info(
-        "Upload a traffic video to begin analysis."
-    )
-
-    st.stop()
-
-
-# =========================================================
-# FILE SIZE
-# =========================================================
-
-file_size_mb = uploaded.size / (1024 * 1024)
-
-if file_size_mb > 200:
-
-    st.error(
-        f"File is {file_size_mb:.1f} MB. "
-        "Please upload a video below 200 MB."
-    )
-
-    st.stop()
-
-
-st.success(
-    f"Loaded: {uploaded.name} · {file_size_mb:.1f} MB"
-)
-
-
-# =========================================================
-# START
-# =========================================================
-
-start = st.button(
-    "🚀 Start AI Traffic Analysis",
-    type="primary",
-    use_container_width=True
-)
-
-
-if not start:
-
-    st.stop()
-
-
-# =========================================================
-# SAVE VIDEO
-# =========================================================
-
-video_path = "uploaded_traffic.mp4"
-
-with open(video_path, "wb") as f:
-
-    f.write(
-        uploaded.getbuffer()
-    )
-
-
-# =========================================================
-# LOAD MODELS
-# =========================================================
-
-with st.spinner("Loading AI models..."):
-
-    (
-        vehicle_model,
-        plate_model,
-        reader
-    ) = load_models()
-
-
-# =========================================================
-# VIDEO
-# =========================================================
-
-cap = cv2.VideoCapture(video_path)
+cap = cv2.VideoCapture(VIDEO_PATH)
 
 if not cap.isOpened():
+    print("ERROR: Could not open video.")
+    exit()
 
-    st.error("Could not open video.")
+fps_video = cap.get(cv2.CAP_PROP_FPS)
 
-    st.stop()
+width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-
-total_frames = int(
+total_video_frames = int(
     cap.get(cv2.CAP_PROP_FRAME_COUNT)
 )
 
+print()
+print("Video information")
+print("------------------------------")
+print("Resolution :", width, "x", height)
+print("FPS        :", fps_video)
+print("Frames     :", total_video_frames)
+print("Line Y     :", LINE_Y)
+print("------------------------------")
 
-# =========================================================
-# VARIABLES
-# =========================================================
+# ==========================================
+# OUTPUT VIDEO
+# ==========================================
 
-frame_number = 0
-processed_frames = 0
+output_path = "outputs/traffic_counted.mp4"
 
-all_ids = set()
-
-plate_data = {}
-
-last_ocr = {}
-
-FRAME_SKIP = 3
-OCR_INTERVAL = 45
-
-
-# =========================================================
-# LIVE FEED
-# =========================================================
-
-st.markdown(
-    '<div class="section">Live Feed</div>',
-    unsafe_allow_html=True
+fourcc = cv2.VideoWriter_fourcc(
+    *"mp4v"
 )
 
-video_display = st.empty()
-
-progress = st.progress(0)
-
-status = st.empty()
-
-
-# =========================================================
-# STATISTICS
-# =========================================================
-
-st.markdown(
-    '<div class="section">Live Traffic Statistics</div>',
-    unsafe_allow_html=True
+out = cv2.VideoWriter(
+    output_path,
+    fourcc,
+    fps_video,
+    (width, height)
 )
 
-c1, c2, c3, c4, c5 = st.columns(5)
+# ==========================================
+# TRACKING DATA
+# ==========================================
 
-tracked_box = c1.empty()
-cars_box = c2.empty()
-bikes_box = c3.empty()
-buses_box = c4.empty()
-trucks_box = c5.empty()
+previous_positions = {}
 
+counted_ids = set()
 
-# =========================================================
-# PLATES
-# =========================================================
+counts = {
+    "Car": 0,
+    "Motorcycle": 0,
+    "Bus": 0,
+    "Truck": 0
+}
 
-st.markdown(
-    '<div class="section">License Plates</div>',
-    unsafe_allow_html=True
-)
+frame_count = 0
 
-plate_display = st.empty()
+start_time = time.time()
 
-
-# =========================================================
+# ==========================================
 # PROCESS VIDEO
-# =========================================================
+# ==========================================
 
 while True:
 
-    ret, frame = cap.read()
+    success, frame = cap.read()
 
-    if not ret:
+    if not success:
         break
 
-    frame_number += 1
+    frame_count += 1
 
-    if frame_number % FRAME_SKIP != 0:
-        continue
+    # ======================================
+    # YOLO + BYTE TRACK
+    # ======================================
 
-    processed_frames += 1
-
-    # -----------------------------------------------------
-    # TRACK VEHICLES
-    # -----------------------------------------------------
-
-    results = vehicle_model.track(
+    results = model.track(
         frame,
         persist=True,
+        classes=list(VEHICLE_CLASSES.keys()),
+        conf=CONFIDENCE,
         tracker="bytetrack.yaml",
-        conf=0.40,
-        iou=0.5,
         verbose=False
     )
 
     result = results[0]
 
-    current_ids = set()
+    # ======================================
+    # PROCESS DETECTIONS
+    # ======================================
 
-    cars = 0
-    motorcycles = 0
-    buses = 0
-    trucks = 0
+    if result.boxes.id is not None:
 
+        boxes = result.boxes.xyxy.cpu().numpy()
 
-    # -----------------------------------------------------
-    # DETECTIONS
-    # -----------------------------------------------------
+        ids = result.boxes.id.int().cpu().tolist()
 
-    if result.boxes is not None:
+        classes = result.boxes.cls.int().cpu().tolist()
 
-        boxes = result.boxes
+        confidences = result.boxes.conf.cpu().tolist()
 
-        if boxes.id is not None:
+        for box, track_id, class_id, confidence in zip(
+            boxes,
+            ids,
+            classes,
+            confidences
+        ):
 
-            ids = (
-                boxes.id
-                .int()
-                .cpu()
-                .tolist()
+            x1, y1, x2, y2 = map(
+                int,
+                box
             )
 
-            classes = (
-                boxes.cls
-                .int()
-                .cpu()
-                .tolist()
+            # ==================================
+            # CENTER POINT
+            # ==================================
+
+            center_x = int(
+                (x1 + x2) / 2
             )
 
-            coordinates = (
-                boxes.xyxy
-                .int()
-                .cpu()
-                .tolist()
+            center_y = int(
+                (y1 + y2) / 2
             )
 
+            vehicle_type = VEHICLE_CLASSES.get(
+                class_id,
+                "Unknown"
+            )
 
-            for vehicle_id, cls, box in zip(
-                ids,
-                classes,
-                coordinates
-            ):
+            # ==================================
+            # TRACK VEHICLE POSITION
+            # ==================================
 
-                current_ids.add(vehicle_id)
-                all_ids.add(vehicle_id)
+            previous_y = previous_positions.get(
+                track_id
+            )
 
+            if previous_y is not None:
 
-                # -------------------------------------------------
-                # VEHICLE TYPE
-                # -------------------------------------------------
-
-                if cls == 2:
-
-                    vehicle_type = "Car"
-                    cars += 1
-
-                elif cls == 3:
-
-                    vehicle_type = "Motorcycle"
-                    motorcycles += 1
-
-                elif cls == 5:
-
-                    vehicle_type = "Bus"
-                    buses += 1
-
-                elif cls == 7:
-
-                    vehicle_type = "Truck"
-                    trucks += 1
-
-                else:
-
-                    continue
-
-
-                # -------------------------------------------------
-                # BOX
-                # -------------------------------------------------
-
-                x1, y1, x2, y2 = box
-
-                x1 = max(0, x1)
-                y1 = max(0, y1)
-
-                x2 = min(
-                    frame.shape[1],
-                    x2
+                # Moving downward
+                crossed_down = (
+                    previous_y < LINE_Y
+                    and center_y >= LINE_Y
                 )
 
-                y2 = min(
-                    frame.shape[0],
-                    y2
+                # Moving upward
+                crossed_up = (
+                    previous_y > LINE_Y
+                    and center_y <= LINE_Y
                 )
 
-
-                if x2 <= x1 or y2 <= y1:
-                    continue
-
-
-                crop = frame[
-                    y1:y2,
-                    x1:x2
-                ]
-
-
-                # -------------------------------------------------
-                # OCR
-                # -------------------------------------------------
-
-                should_ocr = (
-                    vehicle_id not in last_ocr
-                    or
-                    frame_number - last_ocr[vehicle_id]
-                    >= OCR_INTERVAL
-                )
-
+                # ==================================
+                # COUNT VEHICLE
+                # ==================================
 
                 if (
-                    should_ocr
-                    and crop.size > 0
+                    (crossed_down or crossed_up)
+                    and track_id not in counted_ids
                 ):
 
-                    last_ocr[
-                        vehicle_id
-                    ] = frame_number
+                    counted_ids.add(track_id)
 
+                    if vehicle_type in counts:
 
-                    try:
+                        counts[vehicle_type] += 1
 
-                        plate_results = plate_model(
-                            crop,
-                            conf=0.50,
-                            verbose=False
-                        )
+            previous_positions[track_id] = center_y
 
+            # ==================================
+            # DRAW BOUNDING BOX
+            # ==================================
 
-                        for plate_result in plate_results:
+            cv2.rectangle(
+                frame,
+                (x1, y1),
+                (x2, y2),
+                (0, 255, 0),
+                2
+            )
 
-                            if plate_result.boxes is None:
-                                continue
+            # ==================================
+            # DRAW CENTER
+            # ==================================
 
+            cv2.circle(
+                frame,
+                (center_x, center_y),
+                5,
+                (0, 0, 255),
+                -1
+            )
 
-                            plate_boxes = (
-                                plate_result
-                                .boxes
-                                .xyxy
-                                .int()
-                                .cpu()
-                                .tolist()
-                            )
+            # ==================================
+            # LABEL
+            # ==================================
 
+            label = (
+                f"ID {track_id} | "
+                f"{vehicle_type} "
+                f"{confidence:.2f}"
+            )
 
-                            for pbox in plate_boxes:
+            cv2.putText(
+                frame,
+                label,
+                (x1, max(y1 - 10, 20)),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                (0, 255, 0),
+                2
+            )
 
-                                px1, py1, px2, py2 = pbox
+    # ==========================================
+    # DRAW COUNTING LINE
+    # ==========================================
 
-                                px1 = max(0, px1)
-                                py1 = max(0, py1)
-
-                                px2 = min(
-                                    crop.shape[1],
-                                    px2
-                                )
-
-                                py2 = min(
-                                    crop.shape[0],
-                                    py2
-                                )
-
-
-                                if (
-                                    px2 <= px1
-                                    or
-                                    py2 <= py1
-                                ):
-                                    continue
-
-
-                                plate_crop = crop[
-                                    py1:py2,
-                                    px1:px2
-                                ]
-
-
-                                if plate_crop.size == 0:
-                                    continue
-
-
-                                try:
-
-                                    ocr_results = reader.readtext(
-                                        plate_crop
-                                    )
-
-                                except Exception:
-
-                                    ocr_results = []
-
-
-                                best_text = ""
-                                best_conf = 0.0
-
-
-                                for item in ocr_results:
-
-                                    if len(item) < 3:
-                                        continue
-
-                                    text = clean_text(
-                                        item[1]
-                                    )
-
-                                    confidence = float(
-                                        item[2]
-                                    )
-
-
-                                    if (
-                                        len(text) >= 3
-                                        and
-                                        confidence > best_conf
-                                    ):
-
-                                        best_text = text
-                                        best_conf = confidence
-
-
-                                if best_text:
-
-                                    old = plate_data.get(
-                                        vehicle_id
-                                    )
-
-
-                                    if (
-                                        old is None
-                                        or
-                                        best_conf >
-                                        old["confidence"]
-                                    ):
-
-                                        plate_data[
-                                            vehicle_id
-                                        ] = {
-                                            "text": best_text,
-                                            "confidence": best_conf
-                                        }
-
-                    except Exception:
-                        pass
-
-
-                # -------------------------------------------------
-                # DRAW VEHICLE
-                # -------------------------------------------------
-
-                cv2.rectangle(
-                    frame,
-                    (x1, y1),
-                    (x2, y2),
-                    (195, 230, 0),
-                    2
-                )
-
-
-                label = (
-                    f"{vehicle_type} "
-                    f"ID:{vehicle_id}"
-                )
-
-
-                cv2.putText(
-                    frame,
-                    label,
-                    (
-                        x1,
-                        max(25, y1 - 8)
-                    ),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.55,
-                    (195, 230, 0),
-                    2
-                )
-
-
-                # -------------------------------------------------
-                # DRAW PLATE
-                # -------------------------------------------------
-
-                if vehicle_id in plate_data:
-
-                    plate_text = plate_data[
-                        vehicle_id
-                    ]["text"]
-
-
-                    cv2.putText(
-                        frame,
-                        f"Plate: {plate_text}",
-                        (
-                            x1,
-                            min(
-                                frame.shape[0] - 10,
-                                y2 + 22
-                            )
-                        ),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        0.55,
-                        (32, 176, 255),
-                        2
-                    )
-
-
-    # =====================================================
-    # DISPLAY
-    # =====================================================
+    cv2.line(
+        frame,
+        (0, LINE_Y),
+        (width, LINE_Y),
+        (255, 0, 0),
+        4
+    )
 
     cv2.putText(
         frame,
-        f"Currently Tracked: {len(current_ids)}",
-        (20, 35),
+        "COUNTING LINE",
+        (20, LINE_Y - 10),
         cv2.FONT_HERSHEY_SIMPLEX,
-        0.75,
-        (195, 230, 0),
+        0.7,
+        (255, 0, 0),
         2
     )
 
+    # ==========================================
+    # CALCULATE FPS
+    # ==========================================
 
-    rgb = cv2.cvtColor(
+    elapsed = time.time() - start_time
+
+    fps = (
+        frame_count / elapsed
+        if elapsed > 0
+        else 0
+    )
+
+    # ==========================================
+    # TOTAL COUNT
+    # ==========================================
+
+    total_count = sum(
+        counts.values()
+    )
+
+    # ==========================================
+    # DASHBOARD BACKGROUND
+    # ==========================================
+
+    cv2.rectangle(
         frame,
-        cv2.COLOR_BGR2RGB
+        (10, 10),
+        (300, 210),
+        (0, 0, 0),
+        -1
     )
 
+    # ==========================================
+    # DASHBOARD TITLE
+    # ==========================================
 
-    video_display.image(
-        rgb,
-        channels="RGB",
-        use_container_width=True
+    cv2.putText(
+        frame,
+        "AI TRAFFIC INTELLIGENCE",
+        (20, 40),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.55,
+        (255, 255, 255),
+        2
     )
 
+    # ==========================================
+    # COUNTS
+    # ==========================================
 
-    # =====================================================
-    # KPIs
-    # =====================================================
-
-    show_kpi(
-        tracked_box,
-        "Currently Tracked",
-        len(current_ids),
-        True
+    cv2.putText(
+        frame,
+        f"Cars        : {counts['Car']}",
+        (20, 75),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.6,
+        (255, 255, 255),
+        2
     )
 
-    show_kpi(
-        cars_box,
-        "Cars",
-        cars
+    cv2.putText(
+        frame,
+        f"Motorcycles : {counts['Motorcycle']}",
+        (20, 105),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.6,
+        (255, 255, 255),
+        2
     )
 
-    show_kpi(
-        bikes_box,
-        "Motorcycles",
-        motorcycles
+    cv2.putText(
+        frame,
+        f"Buses       : {counts['Bus']}",
+        (20, 135),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.6,
+        (255, 255, 255),
+        2
     )
 
-    show_kpi(
-        buses_box,
-        "Buses",
-        buses
+    cv2.putText(
+        frame,
+        f"Trucks      : {counts['Truck']}",
+        (20, 165),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.6,
+        (255, 255, 255),
+        2
     )
 
-    show_kpi(
-        trucks_box,
-        "Trucks",
-        trucks
+    cv2.putText(
+        frame,
+        f"TOTAL       : {total_count}",
+        (20, 195),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.65,
+        (0, 255, 255),
+        2
     )
 
+    # ==========================================
+    # FPS DISPLAY
+    # ==========================================
 
-    # =====================================================
-    # PLATE TABLE
-    # =====================================================
-
-    if plate_data:
-
-        rows = []
-
-        for vehicle_id, data in plate_data.items():
-
-            rows.append({
-                "Vehicle ID": f"#{vehicle_id}",
-                "License Plate": data["text"],
-                "Confidence": round(
-                    data["confidence"],
-                    2
-                )
-            })
-
-
-        plate_df = pd.DataFrame(rows)
-
-
-        plate_df["_sort"] = (
-            plate_df["Vehicle ID"]
-            .str.replace(
-                "#",
-                "",
-                regex=False
-            )
-            .astype(int)
-        )
-
-
-        plate_df = (
-            plate_df
-            .sort_values("_sort")
-            .drop(columns="_sort")
-        )
-
-
-        plate_display.dataframe(
-            plate_df,
-            use_container_width=True,
-            hide_index=True
-        )
-
-    else:
-
-        plate_display.info(
-            "No license plates recognized yet."
-        )
-
-
-    # =====================================================
-    # PROGRESS
-    # =====================================================
-
-    if total_frames > 0:
-
-        progress.progress(
-            min(
-                frame_number / total_frames,
-                1.0
-            )
-        )
-
-
-    status.caption(
-        f"FRAME {frame_number}/{total_frames} "
-        f"· TRACK IDS OBSERVED: {len(all_ids)} "
-        f"· PLATES RECOGNIZED: {len(plate_data)}"
+    cv2.putText(
+        frame,
+        f"FPS: {fps:.1f}",
+        (width - 130, 30),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.6,
+        (0, 255, 255),
+        2
     )
 
+    # ==========================================
+    # SAVE FRAME
+    # ==========================================
 
-# =========================================================
-# FINISH
-# =========================================================
+    out.write(frame)
+
+    # ==========================================
+    # SHOW VIDEO
+    # ==========================================
+
+    cv2.imshow(
+        "AI Traffic Intelligence",
+        frame
+    )
+
+    # ==========================================
+    # PRESS Q TO EXIT
+    # ==========================================
+
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
+
+
+# ==========================================
+# CLEANUP
+# ==========================================
 
 cap.release()
 
-progress.progress(1.0)
+out.release()
 
-st.success(
-    "🎉 AI Traffic Analysis Completed!"
-)
+cv2.destroyAllWindows()
 
-
-# =========================================================
+# ==========================================
 # FINAL RESULTS
-# =========================================================
+# ==========================================
 
-st.markdown(
-    '<div class="section">Final Results</div>',
-    unsafe_allow_html=True
+total = sum(
+    counts.values()
 )
 
+print()
+print("=" * 45)
+print("       AI TRAFFIC INTELLIGENCE")
+print("=" * 45)
 
-a, b, c = st.columns(3)
+print(f"Cars        : {counts['Car']}")
+print(f"Motorcycles : {counts['Motorcycle']}")
+print(f"Buses       : {counts['Bus']}")
+print(f"Trucks      : {counts['Truck']}")
 
+print("-" * 45)
 
-show_kpi(
-    a,
-    "Track IDs Observed",
-    len(all_ids),
-    True
-)
+print(f"Total crossed: {total}")
 
-show_kpi(
-    b,
-    "License Plates Recognized",
-    len(plate_data)
-)
+print("=" * 45)
 
-show_kpi(
-    c,
-    "Frames Processed",
-    processed_frames
-)
-
-
-# =========================================================
-# FINAL PLATE TABLE
-# =========================================================
-
-st.markdown(
-    '<div class="section">Final License Plate Results</div>',
-    unsafe_allow_html=True
-)
-
-
-if plate_data:
-
-    final_rows = []
-
-
-    for vehicle_id, data in plate_data.items():
-
-        final_rows.append({
-            "Vehicle ID": f"#{vehicle_id}",
-            "License Plate": data["text"],
-            "Confidence": round(
-                data["confidence"],
-                2
-            )
-        })
-
-
-    final_df = pd.DataFrame(
-        final_rows
-    )
-
-
-    final_df["_sort"] = (
-        final_df["Vehicle ID"]
-        .str.replace(
-            "#",
-            "",
-            regex=False
-        )
-        .astype(int)
-    )
-
-
-    final_df = (
-        final_df
-        .sort_values("_sort")
-        .drop(columns="_sort")
-    )
-
-
-    st.dataframe(
-        final_df,
-        use_container_width=True,
-        hide_index=True
-    )
-
-else:
-
-    st.info(
-        "No license plates were recognized."
-    )
+print()
+print("Output video:")
+print(output_path)
