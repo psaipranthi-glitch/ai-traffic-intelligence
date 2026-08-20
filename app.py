@@ -69,50 +69,140 @@ def inject_theme():
 
 
         /* =================================================
-           KPI
+           HEADER
            ================================================= */
 
-        .kpi {
-            min-height: 88px;
-            padding: 15px 17px;
-
-            background: rgba(16,22,29,0.90);
+        .main-header {
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(16,22,29,0.98),
+                    rgba(10,14,19,0.98)
+                );
 
             border: 1px solid #26323D;
 
-            border-radius: 7px;
+            border-radius: 10px;
+
+            padding: 22px 26px;
+
+            margin-bottom: 28px;
+
+            width: 100%;
 
             box-sizing: border-box;
+
+            box-shadow:
+                0 8px 30px rgba(0,0,0,0.18);
         }
 
-        .kpi-label {
-            margin-bottom: 7px;
+        .header-title {
+            display: flex;
 
-            font-family: 'JetBrains Mono', monospace;
+            align-items: center;
 
-            font-size: 10px;
+            gap: 12px;
 
-            font-weight: 500;
+            font-family:
+                'JetBrains Mono',
+                monospace;
 
-            letter-spacing: 1.3px;
+            font-size: 23px;
 
-            text-transform: uppercase;
+            font-weight: 700;
 
-            color: #8B9AA8;
-        }
-
-        .kpi-value {
-            font-family: 'JetBrains Mono', monospace;
-
-            font-size: 27px;
-
-            font-weight: 600;
+            letter-spacing: 0.6px;
 
             color: #E7EDF3;
         }
 
-        .kpi-value.accent {
+        .header-icon {
             color: #00E6C3;
+
+            font-size: 25px;
+        }
+
+        .header-subtitle {
+            margin-top: 8px;
+
+            font-family:
+                'IBM Plex Sans',
+                sans-serif;
+
+            font-size: 13px;
+
+            color: #8B9AA8;
+
+            letter-spacing: 0.4px;
+        }
+
+        .header-status-row {
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            margin-top: 16px;
+        }
+
+        .system-status {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 6px 13px;
+
+            border:
+                1px solid
+                rgba(0,230,195,0.35);
+
+            border-radius: 20px;
+
+            background:
+                rgba(0,230,195,0.06);
+
+            color: #00E6C3;
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            letter-spacing: 1px;
+        }
+
+        .status-dot {
+            display: inline-block;
+
+            width: 8px;
+
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #00E6C3;
+
+            box-shadow:
+                0 0 8px
+                rgba(0,230,195,0.8);
+        }
+
+        .engine-status {
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 10px;
+
+            color: #586774;
+
+            letter-spacing: 0.8px;
         }
 
 
@@ -127,7 +217,9 @@ def inject_theme():
 
             border-left: 2px solid #00E6C3;
 
-            font-family: 'JetBrains Mono', monospace;
+            font-family:
+                'JetBrains Mono',
+                monospace;
 
             font-size: 11px;
 
@@ -142,17 +234,127 @@ def inject_theme():
 
 
         /* =================================================
+           SECTION DESCRIPTION
+           ================================================= */
+
+        .section-description {
+            margin-top: -3px;
+
+            margin-bottom: 10px;
+
+            font-family:
+                'IBM Plex Sans',
+                sans-serif;
+
+            font-size: 12px;
+
+            color: #586774;
+
+            letter-spacing: 0.3px;
+        }
+
+
+        /* =================================================
            FILE UPLOADER
            ================================================= */
 
         [data-testid="stFileUploader"] {
-            background: #10161D;
+            background:
+                rgba(16,22,29,0.90);
 
-            border: 1px solid #26323D;
+            border:
+                1px solid
+                #26323D;
 
             border-radius: 8px;
 
             padding: 12px;
+
+            transition:
+                border-color 0.2s ease,
+                background 0.2s ease;
+        }
+
+        [data-testid="stFileUploader"]:hover {
+            border-color:
+                rgba(0,230,195,0.45);
+
+            background:
+                rgba(16,22,29,0.98);
+        }
+
+        [data-testid="stFileUploaderDropzone"] {
+            background:
+                rgba(10,14,19,0.55);
+
+            border-radius: 6px;
+        }
+
+
+        /* =================================================
+           UPLOAD TEXT
+           ================================================= */
+
+        [data-testid="stFileUploaderDropzone"] div {
+            font-family:
+                'IBM Plex Sans',
+                sans-serif;
+        }
+
+
+        /* =================================================
+           KPI
+           ================================================= */
+
+        .kpi {
+            min-height: 88px;
+
+            padding: 15px 17px;
+
+            background:
+                rgba(16,22,29,0.90);
+
+            border:
+                1px solid
+                #26323D;
+
+            border-radius: 7px;
+
+            box-sizing: border-box;
+        }
+
+        .kpi-label {
+            margin-bottom: 7px;
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 10px;
+
+            font-weight: 500;
+
+            letter-spacing: 1.3px;
+
+            text-transform: uppercase;
+
+            color: #8B9AA8;
+        }
+
+        .kpi-value {
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size: 27px;
+
+            font-weight: 600;
+
+            color: #E7EDF3;
+        }
+
+        .kpi-value.accent {
+            color: #00E6C3;
         }
 
 
@@ -167,7 +369,9 @@ def inject_theme():
 
             background: #10161D;
 
-            border: 1px solid #26323D;
+            border:
+                1px solid
+                #26323D;
 
             border-radius: 8px;
         }
@@ -184,15 +388,20 @@ def inject_theme():
 
             padding: 10px 16px;
 
-            border: 1px solid #00E6C3;
+            border:
+                1px solid
+                #00E6C3;
 
             border-radius: 7px;
 
-            background: rgba(0,230,195,0.07);
+            background:
+                rgba(0,230,195,0.07);
 
             color: #00E6C3;
 
-            font-family: 'JetBrains Mono', monospace;
+            font-family:
+                'JetBrains Mono',
+                monospace;
 
             font-weight: 600;
 
@@ -200,11 +409,14 @@ def inject_theme():
         }
 
         .stButton > button:hover {
-            background: rgba(0,230,195,0.16);
+            background:
+                rgba(0,230,195,0.16);
 
-            border-color: #00E6C3;
+            border-color:
+                #00E6C3;
 
-            color: #00E6C3;
+            color:
+                #00E6C3;
         }
 
 
@@ -213,7 +425,9 @@ def inject_theme():
            ================================================= */
 
         [data-testid="stDataFrame"] {
-            border: 1px solid #26323D;
+            border:
+                1px solid
+                #26323D;
 
             border-radius: 7px;
 
@@ -230,23 +444,48 @@ def inject_theme():
         .empty-state {
             padding: 22px;
 
-            margin-top: 4px;
+            margin-top: 10px;
 
             text-align: center;
 
-            background: rgba(16,22,29,0.55);
+            background:
+                rgba(16,22,29,0.55);
 
-            border: 1px dashed #26323D;
+            border:
+                1px dashed
+                #26323D;
 
             border-radius: 7px;
 
-            font-family: 'JetBrains Mono', monospace;
+            font-family:
+                'JetBrains Mono',
+                monospace;
 
             font-size: 11px;
 
             letter-spacing: 0.8px;
 
             color: #8B9AA8;
+        }
+
+        .empty-title {
+            font-size: 13px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.8px;
+
+            color: #E7EDF3;
+
+            margin-bottom: 6px;
+        }
+
+        .empty-description {
+            font-size: 11px;
+
+            color: #8B9AA8;
+
+            letter-spacing: 0.5px;
         }
 
 
@@ -257,13 +496,24 @@ def inject_theme():
         .status-line {
             margin-top: 7px;
 
-            font-family: 'JetBrains Mono', monospace;
+            font-family:
+                'JetBrains Mono',
+                monospace;
 
             font-size: 11px;
 
             letter-spacing: 0.3px;
 
             color: #8B9AA8;
+        }
+
+
+        /* =================================================
+           SUCCESS MESSAGE
+           ================================================= */
+
+        [data-testid="stAlert"] {
+            border-radius: 7px;
         }
 
         </style>
@@ -280,49 +530,20 @@ def render_header():
 
     st.markdown(
         """
-        <div style="
-            background:linear-gradient(
-                135deg,
-                rgba(16,22,29,0.98),
-                rgba(10,14,19,0.98)
-            );
-            border:1px solid #26323D;
-            border-radius:10px;
-            padding:22px 26px;
-            margin-bottom:28px;
-            width:100%;
-            box-sizing:border-box;
-            box-shadow:0 8px 30px rgba(0,0,0,0.18);
-        ">
+        <div class="main-header">
 
-            <div style="
-                display:flex;
-                align-items:center;
-                gap:12px;
-                font-family:'JetBrains Mono',monospace;
-                font-size:23px;
-                font-weight:700;
-                letter-spacing:0.6px;
-                color:#E7EDF3;
-            ">
+            <div class="header-title">
 
-                <span style="
-                    color:#00E6C3;
-                    font-size:25px;
-                ">🚦</span>
+                <span class="header-icon">
+                    🚦
+                </span>
 
                 AI TRAFFIC INTELLIGENCE
 
             </div>
 
 
-            <div style="
-                margin-top:8px;
-                font-family:'IBM Plex Sans',sans-serif;
-                font-size:13px;
-                color:#8B9AA8;
-                letter-spacing:0.4px;
-            ">
+            <div class="header-subtitle">
 
                 Real-time traffic monitoring powered by
                 YOLO11 · ByteTrack · License Plate OCR
@@ -330,50 +551,18 @@ def render_header():
             </div>
 
 
-            <div style="
-                display:flex;
-                align-items:center;
-                gap:14px;
-                margin-top:16px;
-            ">
+            <div class="header-status-row">
 
+                <div class="system-status">
 
-                <div style="
-                    display:inline-flex;
-                    align-items:center;
-                    gap:8px;
-                    padding:6px 13px;
-                    border:1px solid rgba(0,230,195,0.35);
-                    border-radius:20px;
-                    background:rgba(0,230,195,0.06);
-                    color:#00E6C3;
-                    font-family:'JetBrains Mono',monospace;
-                    font-size:11px;
-                    font-weight:600;
-                    letter-spacing:1px;
-                ">
-
-                    <span style="
-                        display:inline-block;
-                        width:8px;
-                        height:8px;
-                        border-radius:50%;
-                        background:#00E6C3;
-                        box-shadow:
-                            0 0 8px rgba(0,230,195,0.8);
-                    "></span>
+                    <span class="status-dot"></span>
 
                     SYSTEM ONLINE
 
                 </div>
 
 
-                <div style="
-                    font-family:'JetBrains Mono',monospace;
-                    font-size:10px;
-                    color:#586774;
-                    letter-spacing:0.8px;
-                ">
+                <div class="engine-status">
 
                     MULTIMODAL VISION ENGINE
 
@@ -474,13 +663,21 @@ def clean_text(text):
 # =========================================================
 
 st.markdown(
-    '<div class="section-label">Input Feed</div>',
+    """
+    <div class="section-label">
+        Input Feed
+    </div>
+
+    <div class="section-description">
+        200MB per file &nbsp;•&nbsp; MP4, AVI, MOV, MKV
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
 
 uploaded = st.file_uploader(
-    "Upload Traffic Video",
+    "Upload a traffic video",
     type=[
         "mp4",
         "avi",
@@ -500,7 +697,15 @@ if uploaded is None:
     st.markdown(
         """
         <div class="empty-state">
-            UPLOAD A TRAFFIC VIDEO TO BEGIN ANALYSIS
+
+            <div class="empty-title">
+                READY FOR VIDEO INPUT
+            </div>
+
+            <div class="empty-description">
+                Upload a traffic video to begin AI analysis
+            </div>
+
         </div>
         """,
         unsafe_allow_html=True
@@ -617,7 +822,6 @@ all_ids = set()
 plate_data = {}
 
 last_ocr = {}
-
 
 FRAME_SKIP = 3
 
