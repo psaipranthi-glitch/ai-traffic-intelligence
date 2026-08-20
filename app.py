@@ -13,94 +13,387 @@ import easyocr
 st.set_page_config(
     page_title="AI Traffic Intelligence",
     page_icon="🚦",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 
 # =========================================================
-# SIMPLE DARK UI
+# THEME
 # =========================================================
 
-st.markdown(
-    """
-    <style>
-    .stApp {
-        background-color: #0A0E13;
-    }
+def inject_theme():
 
-    .block-container {
-        padding-top: 3rem;
-        max-width: 1400px;
-    }
+    st.markdown(
+        """
+        <style>
 
-    h1 {
-        font-family: monospace !important;
-        letter-spacing: 1px;
-    }
+        @import url(
+            'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap'
+        );
 
-    .section {
-        font-family: monospace;
-        color: #8B9AA8;
-        border-left: 3px solid #00E6C3;
-        padding-left: 10px;
-        margin-top: 25px;
-        margin-bottom: 12px;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-    }
+        :root {
+            --bg: #0A0E13;
+            --panel: #10161D;
+            --border: #26323D;
+            --text: #E7EDF3;
+            --muted: #8B9AA8;
+            --cyan: #00E6C3;
+        }
 
-    .kpi {
-        background: #10161D;
-        border: 1px solid #26323D;
-        border-radius: 7px;
-        padding: 15px;
-    }
+        html,
+        body,
+        [class*="css"] {
+            font-family: 'IBM Plex Sans', sans-serif;
+        }
 
-    .kpi-label {
-        color: #8B9AA8;
-        font-family: monospace;
-        font-size: 11px;
-    }
+        .stApp {
+            background:
+                radial-gradient(
+                    circle at 15% 0%,
+                    rgba(0,230,195,0.055),
+                    transparent 35%
+                ),
+                #0A0E13;
+        }
 
-    .kpi-value {
-        color: #E7EDF3;
-        font-family: monospace;
-        font-size: 28px;
-        font-weight: 600;
-    }
+        header[data-testid="stHeader"] {
+            background: transparent;
+        }
 
-    .accent {
-        color: #00E6C3 !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+        .block-container {
+            max-width: 1400px;
+            padding-top: 3.2rem;
+            padding-bottom: 3rem;
+        }
+
+
+        /* =================================================
+           KPI
+           ================================================= */
+
+        .kpi {
+            min-height: 88px;
+            padding: 15px 17px;
+
+            background: rgba(16,22,29,0.90);
+
+            border: 1px solid #26323D;
+
+            border-radius: 7px;
+
+            box-sizing: border-box;
+        }
+
+        .kpi-label {
+            margin-bottom: 7px;
+
+            font-family: 'JetBrains Mono', monospace;
+
+            font-size: 10px;
+
+            font-weight: 500;
+
+            letter-spacing: 1.3px;
+
+            text-transform: uppercase;
+
+            color: #8B9AA8;
+        }
+
+        .kpi-value {
+            font-family: 'JetBrains Mono', monospace;
+
+            font-size: 27px;
+
+            font-weight: 600;
+
+            color: #E7EDF3;
+        }
+
+        .kpi-value.accent {
+            color: #00E6C3;
+        }
+
+
+        /* =================================================
+           SECTION LABEL
+           ================================================= */
+
+        .section-label {
+            margin: 25px 0 12px 0;
+
+            padding-left: 10px;
+
+            border-left: 2px solid #00E6C3;
+
+            font-family: 'JetBrains Mono', monospace;
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            letter-spacing: 1.8px;
+
+            text-transform: uppercase;
+
+            color: #8B9AA8;
+        }
+
+
+        /* =================================================
+           FILE UPLOADER
+           ================================================= */
+
+        [data-testid="stFileUploader"] {
+            background: #10161D;
+
+            border: 1px solid #26323D;
+
+            border-radius: 8px;
+
+            padding: 12px;
+        }
+
+
+        /* =================================================
+           VIDEO
+           ================================================= */
+
+        [data-testid="stImage"] {
+            width: 100%;
+
+            padding: 7px;
+
+            background: #10161D;
+
+            border: 1px solid #26323D;
+
+            border-radius: 8px;
+        }
+
+
+        /* =================================================
+           BUTTON
+           ================================================= */
+
+        .stButton > button {
+            width: 100%;
+
+            margin-top: 8px;
+
+            padding: 10px 16px;
+
+            border: 1px solid #00E6C3;
+
+            border-radius: 7px;
+
+            background: rgba(0,230,195,0.07);
+
+            color: #00E6C3;
+
+            font-family: 'JetBrains Mono', monospace;
+
+            font-weight: 600;
+
+            letter-spacing: 0.5px;
+        }
+
+        .stButton > button:hover {
+            background: rgba(0,230,195,0.16);
+
+            border-color: #00E6C3;
+
+            color: #00E6C3;
+        }
+
+
+        /* =================================================
+           DATAFRAME
+           ================================================= */
+
+        [data-testid="stDataFrame"] {
+            border: 1px solid #26323D;
+
+            border-radius: 7px;
+
+            overflow: hidden;
+
+            margin-top: 8px;
+        }
+
+
+        /* =================================================
+           EMPTY STATE
+           ================================================= */
+
+        .empty-state {
+            padding: 22px;
+
+            margin-top: 4px;
+
+            text-align: center;
+
+            background: rgba(16,22,29,0.55);
+
+            border: 1px dashed #26323D;
+
+            border-radius: 7px;
+
+            font-family: 'JetBrains Mono', monospace;
+
+            font-size: 11px;
+
+            letter-spacing: 0.8px;
+
+            color: #8B9AA8;
+        }
+
+
+        /* =================================================
+           STATUS
+           ================================================= */
+
+        .status-line {
+            margin-top: 7px;
+
+            font-family: 'JetBrains Mono', monospace;
+
+            font-size: 11px;
+
+            letter-spacing: 0.3px;
+
+            color: #8B9AA8;
+        }
+
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 
 # =========================================================
 # HEADER
 # =========================================================
 
-st.title("🚦 AI TRAFFIC INTELLIGENCE")
+def render_header():
 
-st.caption(
-    "YOLO11 · ByteTrack · License Plate OCR"
-)
+    st.markdown(
+        """
+        <div style="
+            background:#10161D;
+            border:1px solid #26323D;
+            border-radius:8px;
+            padding:20px 24px;
+            margin-bottom:28px;
+            width:100%;
+            box-sizing:border-box;
+        ">
 
-st.success("● SYSTEM READY")
+            <div style="
+                font-family:monospace;
+                font-size:23px;
+                font-weight:700;
+                letter-spacing:0.6px;
+                color:#E7EDF3;
+            ">
+                🚦 AI TRAFFIC INTELLIGENCE
+            </div>
+
+            <div style="
+                margin-top:7px;
+                font-family:Arial,sans-serif;
+                font-size:13px;
+                color:#8B9AA8;
+                letter-spacing:0.4px;
+            ">
+                YOLO11 · ByteTrack · License Plate OCR
+            </div>
+
+            <div style="
+                display:inline-flex;
+                align-items:center;
+                gap:8px;
+                margin-top:14px;
+                padding:6px 13px;
+                border:1px solid rgba(0,230,195,0.35);
+                border-radius:20px;
+                background:rgba(0,230,195,0.06);
+                color:#00E6C3;
+                font-family:monospace;
+                font-size:11px;
+                font-weight:600;
+                letter-spacing:1px;
+            ">
+                <span style="
+                    display:inline-block;
+                    width:8px;
+                    height:8px;
+                    border-radius:50%;
+                    background:#00E6C3;
+                    box-shadow:0 0 8px rgba(0,230,195,0.8);
+                "></span>
+
+                SYSTEM READY
+            </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 
 # =========================================================
-# MODEL LOADING
+# KPI HTML
+# =========================================================
+
+def kpi_html(label, value, accent=False):
+
+    value_class = (
+        "kpi-value accent"
+        if accent
+        else
+        "kpi-value"
+    )
+
+    return f"""
+    <div class="kpi">
+
+        <div class="kpi-label">
+            {label}
+        </div>
+
+        <div class="{value_class}">
+            {value}
+        </div>
+
+    </div>
+    """
+
+
+# =========================================================
+# INITIAL UI
+# =========================================================
+
+inject_theme()
+
+render_header()
+
+
+# =========================================================
+# LOAD MODELS
 # =========================================================
 
 @st.cache_resource(show_spinner=False)
 def load_models():
 
-    vehicle_model = YOLO("yolo11n.pt")
+    vehicle_model = YOLO(
+        "yolo11n.pt"
+    )
 
-    plate_model = YOLO("models/best.pt")
+    plate_model = YOLO(
+        "models/best.pt"
+    )
 
     reader = easyocr.Reader(
         ["en"],
@@ -108,7 +401,11 @@ def load_models():
         verbose=False
     )
 
-    return vehicle_model, plate_model, reader
+    return (
+        vehicle_model,
+        plate_model,
+        reader
+    )
 
 
 # =========================================================
@@ -119,55 +416,50 @@ def clean_text(text):
 
     text = str(text).upper()
 
-    return re.sub(
+    text = re.sub(
         r"[^A-Z0-9]",
         "",
         text
     )
 
-
-# =========================================================
-# KPI
-# =========================================================
-
-def show_kpi(container, label, value, accent=False):
-
-    color_class = "accent" if accent else ""
-
-    container.markdown(
-        f"""
-        <div class="kpi">
-            <div class="kpi-label">
-                {label}
-            </div>
-            <div class="kpi-value {color_class}">
-                {value}
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    return text
 
 
 # =========================================================
-# INPUT
+# INPUT FEED
 # =========================================================
 
 st.markdown(
-    '<div class="section">Input Feed</div>',
+    '<div class="section-label">Input Feed</div>',
     unsafe_allow_html=True
 )
 
+
 uploaded = st.file_uploader(
     "Upload Traffic Video",
-    type=["mp4", "avi", "mov", "mkv"]
+    type=[
+        "mp4",
+        "avi",
+        "mov",
+        "mkv"
+    ],
+    label_visibility="collapsed"
 )
 
 
+# =========================================================
+# NO VIDEO
+# =========================================================
+
 if uploaded is None:
 
-    st.info(
-        "Upload a traffic video to begin analysis."
+    st.markdown(
+        """
+        <div class="empty-state">
+            UPLOAD A TRAFFIC VIDEO TO BEGIN ANALYSIS
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
     st.stop()
@@ -177,13 +469,15 @@ if uploaded is None:
 # FILE SIZE
 # =========================================================
 
-file_size_mb = uploaded.size / (1024 * 1024)
+file_size_mb = uploaded.size / (
+    1024 * 1024
+)
+
 
 if file_size_mb > 200:
 
     st.error(
-        f"File is {file_size_mb:.1f} MB. "
-        "Please upload a video below 200 MB."
+        "Video exceeds the 200 MB limit."
     )
 
     st.stop()
@@ -195,13 +489,12 @@ st.success(
 
 
 # =========================================================
-# START
+# START BUTTON
 # =========================================================
 
 start = st.button(
-    "🚀 Start AI Traffic Analysis",
-    type="primary",
-    use_container_width=True
+    "🚀 START AI TRAFFIC ANALYSIS",
+    type="primary"
 )
 
 
@@ -216,7 +509,11 @@ if not start:
 
 video_path = "uploaded_traffic.mp4"
 
-with open(video_path, "wb") as f:
+
+with open(
+    video_path,
+    "wb"
+) as f:
 
     f.write(
         uploaded.getbuffer()
@@ -227,7 +524,9 @@ with open(video_path, "wb") as f:
 # LOAD MODELS
 # =========================================================
 
-with st.spinner("Loading AI models..."):
+with st.spinner(
+    "Loading AI models..."
+):
 
     (
         vehicle_model,
@@ -237,28 +536,36 @@ with st.spinner("Loading AI models..."):
 
 
 # =========================================================
-# VIDEO
+# OPEN VIDEO
 # =========================================================
 
-cap = cv2.VideoCapture(video_path)
+cap = cv2.VideoCapture(
+    video_path
+)
+
 
 if not cap.isOpened():
 
-    st.error("Could not open video.")
+    st.error(
+        "Could not open the uploaded video."
+    )
 
     st.stop()
 
 
 total_frames = int(
-    cap.get(cv2.CAP_PROP_FRAME_COUNT)
+    cap.get(
+        cv2.CAP_PROP_FRAME_COUNT
+    )
 )
 
 
 # =========================================================
-# VARIABLES
+# PROCESSING VARIABLES
 # =========================================================
 
 frame_number = 0
+
 processed_frames = 0
 
 all_ids = set()
@@ -267,7 +574,9 @@ plate_data = {}
 
 last_ocr = {}
 
+
 FRAME_SKIP = 3
+
 OCR_INTERVAL = 45
 
 
@@ -276,9 +585,10 @@ OCR_INTERVAL = 45
 # =========================================================
 
 st.markdown(
-    '<div class="section">Live Feed</div>',
+    '<div class="section-label">Live Feed</div>',
     unsafe_allow_html=True
 )
+
 
 video_display = st.empty()
 
@@ -288,56 +598,70 @@ status = st.empty()
 
 
 # =========================================================
-# STATISTICS
+# LIVE STATISTICS
 # =========================================================
 
 st.markdown(
-    '<div class="section">Live Traffic Statistics</div>',
+    '<div class="section-label">Live Traffic Statistics</div>',
     unsafe_allow_html=True
 )
 
+
 c1, c2, c3, c4, c5 = st.columns(5)
 
+
 tracked_box = c1.empty()
+
 cars_box = c2.empty()
+
 bikes_box = c3.empty()
+
 buses_box = c4.empty()
+
 trucks_box = c5.empty()
 
 
 # =========================================================
-# PLATES
+# LICENSE PLATES
 # =========================================================
 
 st.markdown(
-    '<div class="section">License Plates</div>',
+    '<div class="section-label">License Plates</div>',
     unsafe_allow_html=True
 )
+
 
 plate_display = st.empty()
 
 
 # =========================================================
-# PROCESS VIDEO
+# VIDEO PROCESSING
 # =========================================================
 
 while True:
 
     ret, frame = cap.read()
 
+
     if not ret:
+
         break
+
 
     frame_number += 1
 
+
     if frame_number % FRAME_SKIP != 0:
+
         continue
+
 
     processed_frames += 1
 
-    # -----------------------------------------------------
-    # TRACK VEHICLES
-    # -----------------------------------------------------
+
+    # =====================================================
+    # VEHICLE TRACKING
+    # =====================================================
 
     results = vehicle_model.track(
         frame,
@@ -348,23 +672,29 @@ while True:
         verbose=False
     )
 
+
     result = results[0]
+
 
     current_ids = set()
 
     cars = 0
+
     motorcycles = 0
+
     buses = 0
+
     trucks = 0
 
 
-    # -----------------------------------------------------
-    # DETECTIONS
-    # -----------------------------------------------------
+    # =====================================================
+    # VEHICLE DETECTIONS
+    # =====================================================
 
     if result.boxes is not None:
 
         boxes = result.boxes
+
 
         if boxes.id is not None:
 
@@ -375,12 +705,14 @@ while True:
                 .tolist()
             )
 
+
             classes = (
                 boxes.cls
                 .int()
                 .cpu()
                 .tolist()
             )
+
 
             coordinates = (
                 boxes.xyxy
@@ -390,53 +722,78 @@ while True:
             )
 
 
-            for vehicle_id, cls, box in zip(
+            for (
+                vehicle_id,
+                cls,
+                box
+            ) in zip(
                 ids,
                 classes,
                 coordinates
             ):
 
-                current_ids.add(vehicle_id)
-                all_ids.add(vehicle_id)
+                current_ids.add(
+                    vehicle_id
+                )
+
+                all_ids.add(
+                    vehicle_id
+                )
 
 
-                # -------------------------------------------------
+                # =================================================
                 # VEHICLE TYPE
-                # -------------------------------------------------
+                # =================================================
 
                 if cls == 2:
 
                     vehicle_type = "Car"
+
                     cars += 1
+
 
                 elif cls == 3:
 
                     vehicle_type = "Motorcycle"
+
                     motorcycles += 1
+
 
                 elif cls == 5:
 
                     vehicle_type = "Bus"
+
                     buses += 1
+
 
                 elif cls == 7:
 
                     vehicle_type = "Truck"
+
                     trucks += 1
+
 
                 else:
 
                     continue
 
 
-                # -------------------------------------------------
+                # =================================================
                 # BOX
-                # -------------------------------------------------
+                # =================================================
 
                 x1, y1, x2, y2 = box
 
-                x1 = max(0, x1)
-                y1 = max(0, y1)
+
+                x1 = max(
+                    0,
+                    x1
+                )
+
+                y1 = max(
+                    0,
+                    y1
+                )
 
                 x2 = min(
                     frame.shape[1],
@@ -449,7 +806,12 @@ while True:
                 )
 
 
-                if x2 <= x1 or y2 <= y1:
+                if (
+                    x2 <= x1
+                    or
+                    y2 <= y1
+                ):
+
                     continue
 
 
@@ -459,21 +821,30 @@ while True:
                 ]
 
 
-                # -------------------------------------------------
+                # =================================================
                 # OCR
-                # -------------------------------------------------
+                # =================================================
 
                 should_ocr = (
-                    vehicle_id not in last_ocr
+
+                    vehicle_id
+                    not in last_ocr
+
                     or
-                    frame_number - last_ocr[vehicle_id]
+
+                    frame_number
+                    -
+                    last_ocr[
+                        vehicle_id
+                    ]
                     >= OCR_INTERVAL
                 )
 
 
                 if (
                     should_ocr
-                    and crop.size > 0
+                    and
+                    crop.size > 0
                 ):
 
                     last_ocr[
@@ -492,7 +863,11 @@ while True:
 
                         for plate_result in plate_results:
 
-                            if plate_result.boxes is None:
+                            if (
+                                plate_result.boxes
+                                is None
+                            ):
+
                                 continue
 
 
@@ -510,8 +885,16 @@ while True:
 
                                 px1, py1, px2, py2 = pbox
 
-                                px1 = max(0, px1)
-                                py1 = max(0, py1)
+
+                                px1 = max(
+                                    0,
+                                    px1
+                                )
+
+                                py1 = max(
+                                    0,
+                                    py1
+                                )
 
                                 px2 = min(
                                     crop.shape[1],
@@ -529,6 +912,7 @@ while True:
                                     or
                                     py2 <= py1
                                 ):
+
                                     continue
 
 
@@ -539,13 +923,15 @@ while True:
 
 
                                 if plate_crop.size == 0:
+
                                     continue
 
 
                                 try:
 
                                     ocr_results = reader.readtext(
-                                        plate_crop
+                                        plate_crop,
+                                        detail=1
                                     )
 
                                 except Exception:
@@ -554,13 +940,16 @@ while True:
 
 
                                 best_text = ""
+
                                 best_conf = 0.0
 
 
                                 for item in ocr_results:
 
                                     if len(item) < 3:
+
                                         continue
+
 
                                     text = clean_text(
                                         item[1]
@@ -578,37 +967,47 @@ while True:
                                     ):
 
                                         best_text = text
+
                                         best_conf = confidence
 
 
                                 if best_text:
 
-                                    old = plate_data.get(
+                                    previous = plate_data.get(
                                         vehicle_id
                                     )
 
 
                                     if (
-                                        old is None
+                                        previous is None
                                         or
-                                        best_conf >
-                                        old["confidence"]
+                                        best_conf
+                                        >
+                                        previous[
+                                            "confidence"
+                                        ]
                                     ):
 
                                         plate_data[
                                             vehicle_id
                                         ] = {
-                                            "text": best_text,
-                                            "confidence": best_conf
+
+                                            "text":
+                                                best_text,
+
+                                            "confidence":
+                                                best_conf
+
                                         }
 
                     except Exception:
+
                         pass
 
 
-                # -------------------------------------------------
-                # DRAW VEHICLE
-                # -------------------------------------------------
+                # =================================================
+                # VEHICLE BOX
+                # =================================================
 
                 cv2.rectangle(
                     frame,
@@ -618,6 +1017,10 @@ while True:
                     2
                 )
 
+
+                # =================================================
+                # VEHICLE LABEL
+                # =================================================
 
                 label = (
                     f"{vehicle_type} "
@@ -630,7 +1033,10 @@ while True:
                     label,
                     (
                         x1,
-                        max(25, y1 - 8)
+                        max(
+                            25,
+                            y1 - 8
+                        )
                     ),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.55,
@@ -639,15 +1045,19 @@ while True:
                 )
 
 
-                # -------------------------------------------------
-                # DRAW PLATE
-                # -------------------------------------------------
+                # =================================================
+                # PLATE LABEL
+                # =================================================
 
                 if vehicle_id in plate_data:
 
-                    plate_text = plate_data[
-                        vehicle_id
-                    ]["text"]
+                    plate_text = (
+                        plate_data[
+                            vehicle_id
+                        ][
+                            "text"
+                        ]
+                    )
 
 
                     cv2.putText(
@@ -668,7 +1078,7 @@ while True:
 
 
     # =====================================================
-    # DISPLAY
+    # TRACKING TEXT
     # =====================================================
 
     cv2.putText(
@@ -681,6 +1091,10 @@ while True:
         2
     )
 
+
+    # =====================================================
+    # DISPLAY FRAME
+    # =====================================================
 
     rgb = cv2.cvtColor(
         frame,
@@ -696,38 +1110,52 @@ while True:
 
 
     # =====================================================
-    # KPIs
+    # KPI
     # =====================================================
 
-    show_kpi(
-        tracked_box,
-        "Currently Tracked",
-        len(current_ids),
-        True
+    tracked_box.markdown(
+        kpi_html(
+            "Currently Tracked",
+            len(current_ids),
+            True
+        ),
+        unsafe_allow_html=True
     )
 
-    show_kpi(
-        cars_box,
-        "Cars",
-        cars
+
+    cars_box.markdown(
+        kpi_html(
+            "Cars",
+            cars
+        ),
+        unsafe_allow_html=True
     )
 
-    show_kpi(
-        bikes_box,
-        "Motorcycles",
-        motorcycles
+
+    bikes_box.markdown(
+        kpi_html(
+            "Motorcycles",
+            motorcycles
+        ),
+        unsafe_allow_html=True
     )
 
-    show_kpi(
-        buses_box,
-        "Buses",
-        buses
+
+    buses_box.markdown(
+        kpi_html(
+            "Buses",
+            buses
+        ),
+        unsafe_allow_html=True
     )
 
-    show_kpi(
-        trucks_box,
-        "Trucks",
-        trucks
+
+    trucks_box.markdown(
+        kpi_html(
+            "Trucks",
+            trucks
+        ),
+        unsafe_allow_html=True
     )
 
 
@@ -739,23 +1167,38 @@ while True:
 
         rows = []
 
-        for vehicle_id, data in plate_data.items():
+
+        for (
+            vehicle_id,
+            data
+        ) in plate_data.items():
 
             rows.append({
-                "Vehicle ID": f"#{vehicle_id}",
-                "License Plate": data["text"],
-                "Confidence": round(
-                    data["confidence"],
-                    2
-                )
+
+                "Vehicle ID":
+                    f"#{vehicle_id}",
+
+                "License Plate":
+                    data["text"],
+
+                "Confidence":
+                    round(
+                        data["confidence"],
+                        2
+                    )
+
             })
 
 
-        plate_df = pd.DataFrame(rows)
+        plate_df = pd.DataFrame(
+            rows
+        )
 
 
         plate_df["_sort"] = (
-            plate_df["Vehicle ID"]
+            plate_df[
+                "Vehicle ID"
+            ]
             .str.replace(
                 "#",
                 "",
@@ -775,8 +1218,27 @@ while True:
         plate_display.dataframe(
             plate_df,
             use_container_width=True,
-            hide_index=True
+            hide_index=True,
+            column_config={
+
+                "Vehicle ID":
+                    st.column_config.TextColumn(
+                        "Vehicle ID"
+                    ),
+
+                "License Plate":
+                    st.column_config.TextColumn(
+                        "License Plate"
+                    ),
+
+                "Confidence":
+                    st.column_config.NumberColumn(
+                        "Confidence",
+                        format="%.2f"
+                    )
+            }
         )
+
 
     else:
 
@@ -799,20 +1261,42 @@ while True:
         )
 
 
-    status.caption(
-        f"FRAME {frame_number}/{total_frames} "
-        f"· TRACK IDS OBSERVED: {len(all_ids)} "
-        f"· PLATES RECOGNIZED: {len(plate_data)}"
+    # =====================================================
+    # STATUS
+    # =====================================================
+
+    status.markdown(
+        f"""
+        <div class="status-line">
+
+            FRAME {frame_number}/{total_frames}
+
+            ·
+
+            TRACK IDS OBSERVED: {len(all_ids)}
+
+            ·
+
+            PLATES RECOGNIZED: {len(plate_data)}
+
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
 
 # =========================================================
-# FINISH
+# RELEASE VIDEO
 # =========================================================
 
 cap.release()
 
 progress.progress(1.0)
+
+
+# =========================================================
+# COMPLETED
+# =========================================================
 
 st.success(
     "🎉 AI Traffic Analysis Completed!"
@@ -824,7 +1308,7 @@ st.success(
 # =========================================================
 
 st.markdown(
-    '<div class="section">Final Results</div>',
+    '<div class="section-label">Final Results</div>',
     unsafe_allow_html=True
 )
 
@@ -832,32 +1316,40 @@ st.markdown(
 a, b, c = st.columns(3)
 
 
-show_kpi(
-    a,
-    "Track IDs Observed",
-    len(all_ids),
-    True
+a.markdown(
+    kpi_html(
+        "Track IDs Observed",
+        len(all_ids),
+        True
+    ),
+    unsafe_allow_html=True
 )
 
-show_kpi(
-    b,
-    "License Plates Recognized",
-    len(plate_data)
+
+b.markdown(
+    kpi_html(
+        "License Plates Recognized",
+        len(plate_data)
+    ),
+    unsafe_allow_html=True
 )
 
-show_kpi(
-    c,
-    "Frames Processed",
-    processed_frames
+
+c.markdown(
+    kpi_html(
+        "Frames Processed",
+        processed_frames
+    ),
+    unsafe_allow_html=True
 )
 
 
 # =========================================================
-# FINAL PLATE TABLE
+# FINAL PLATE RESULTS
 # =========================================================
 
 st.markdown(
-    '<div class="section">Final License Plate Results</div>',
+    '<div class="section-label">Final License Plate Results</div>',
     unsafe_allow_html=True
 )
 
@@ -867,15 +1359,25 @@ if plate_data:
     final_rows = []
 
 
-    for vehicle_id, data in plate_data.items():
+    for (
+        vehicle_id,
+        data
+    ) in plate_data.items():
 
         final_rows.append({
-            "Vehicle ID": f"#{vehicle_id}",
-            "License Plate": data["text"],
-            "Confidence": round(
-                data["confidence"],
-                2
-            )
+
+            "Vehicle ID":
+                f"#{vehicle_id}",
+
+            "License Plate":
+                data["text"],
+
+            "Confidence":
+                round(
+                    data["confidence"],
+                    2
+                )
+
         })
 
 
@@ -885,7 +1387,9 @@ if plate_data:
 
 
     final_df["_sort"] = (
-        final_df["Vehicle ID"]
+        final_df[
+            "Vehicle ID"
+        ]
         .str.replace(
             "#",
             "",
@@ -905,8 +1409,27 @@ if plate_data:
     st.dataframe(
         final_df,
         use_container_width=True,
-        hide_index=True
+        hide_index=True,
+        column_config={
+
+            "Vehicle ID":
+                st.column_config.TextColumn(
+                    "Vehicle ID"
+                ),
+
+            "License Plate":
+                st.column_config.TextColumn(
+                    "License Plate"
+                ),
+
+            "Confidence":
+                st.column_config.NumberColumn(
+                    "Confidence",
+                    format="%.2f"
+                )
+        }
     )
+
 
 else:
 
